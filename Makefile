@@ -31,7 +31,7 @@ build: clean_build
 
 test:
 	$(VENVPYTHON) -m pip install -r ci-cd-requirements.txt
-	$(VENVPYTHON) -m tox -p
+	$(VENVPYTHON) -m tox
 
 clean:
 	@echo "Removing Python virtual environment 'venv'."
@@ -48,5 +48,8 @@ sparkling: clean
 	rm -rf htmlcov
 	rm -rf coverage.xml
 	rm -rf *.egg-info
+	rm -rf .pytest_cache
+	rm -f .coverage
+	rm -rf .vscode
 
 .PHONY: install develop bootstrap clean_build build test clean sparkling
