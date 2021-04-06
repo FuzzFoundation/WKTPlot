@@ -9,7 +9,7 @@ setup(
     version=__version__,
     license="MIT",
     author="Michael Simpson, Gerald Sornsen",
-    author_email="msimpson@email.com, gerald@sornsen.io",
+    author_email="mikeysimpson4@gmail.com, gerald@sornsen.io",
     description="Python wrapper for visualiation of shapely geometries.",
     long_description=readme,
     long_description_content_type="text/markdown",
