@@ -8,14 +8,13 @@ setup(
     name="wktplot",
     version=__version__,
     license="MIT",
-    author="Michael, Simpson, Gerald Sornsen",
+    author="Michael Simpson, Gerald Sornsen",
     author_email="msimpson@email.com, gerald@sornsen.io",
     description="Python wrapper for visualiation of shapely geometries.",
     long_description=readme,
     long_description_content_type="text/markdown",
     url="https://github.com/FuzzFoundation/WKTPlot",
     packages=find_packages(),
-    # package_dir={"": "wktplot"},
     install_requires=[
         "descartes>=1.1.0",
         "Shapely>=1.7.1"
