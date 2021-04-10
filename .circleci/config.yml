@@ -1,0 +1,18 @@
+version: 2.1
+
+jobs:
+  unit-tests:
+    docker:
+      - image: gsornsen/python-ci-cd-container:latest
+    steps:
+      - checkout
+      - run:
+          name: Run unit tests
+          command: |
+            make develop
+            make test
+
+workflows:
+  main:
+    jobs:
+      - unit-tests
