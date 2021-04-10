@@ -1,6 +1,15 @@
+# WKTPlot
+
 Utility for plotting shapely geometries and WKTs
 
-Example Usage:
+## Badges
+
+[![CircleCI](https://circleci.com/gh/FuzzFoundation/WKTPlot.svg?style=shield)](https://circleci.com/gh/FuzzFoundation/WKTPlot)
+
+## Usage
+
+Example:
+
 ```python
 from wkt_plot import WKTPLOT
 
