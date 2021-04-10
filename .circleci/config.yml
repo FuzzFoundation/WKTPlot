@@ -1,21 +1,18 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
 jobs:
-  build-and-test:
-    executor: python/default
+  unit-tests:
+    docker:
+      - image: gsornsen/python-ci-cd-container:latest
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
       - run:
-          command: ./manage.py test
-          name: Test
+          name: Run unit tests
+          command: |
+            make develop
+            make test
 
 workflows:
   main:
     jobs:
-      - build-and-test
+      - unit-tests
