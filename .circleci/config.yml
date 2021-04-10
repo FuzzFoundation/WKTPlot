@@ -9,7 +9,6 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            ls
             make develop
             make test
 
