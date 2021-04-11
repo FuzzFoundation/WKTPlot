@@ -8,31 +8,8 @@ from random import choice
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
 
-"""
-from wkt_plot import WKTPLOT
 
-a = Polygon(...)
-b = MultiPolygon(...)
-c = LineString(...)
-d = MultiLineString(...)
-e = "LINESTRING (30 10, 10 30, 40 40)"
-
-plot = WKTPLOT("path/to/save/directory")
-plot.add_shape(a, "crimson", "A Poly")
-plot.add_shape(c, "dimgray", "C Line")
-plot.add_shape(e, "cornflowerblue", "E Line")
-plot.save("A with C with E")
-plot.clear()
-
-plot.add_shapes([
-    (b, "magenta"),
-    (c, "turquoise"),
-    (d, "forestgreen")
-]).save("BCD").clear()
-"""
-
-
-class WKTPLOT:
+class WKTPlot:
 
     def __init__(self, save_dir):
         self.fig = pyplot.figure(1, figsize=(25, 25), dpi=150)
