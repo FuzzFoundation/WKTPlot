@@ -29,6 +29,9 @@ build: clean_build
 	@echo "Building python source distribution and wheel"
 	$(VENVPYTHON) setup.py sdist bdist_wheel
 
+upload:
+	$(VENVPYTHON) -m twine upload dist/*
+
 test:
 	$(VENVPYTHON) -m pip install -r ci-cd-requirements.txt
 	$(VENVPYTHON) -m tox
@@ -52,4 +55,4 @@ sparkling: clean
 	rm -f .coverage
 	rm -rf .vscode
 
-.PHONY: install develop bootstrap clean_build build test clean sparkling
+.PHONY: install develop bootstrap clean_build build test clean sparkling upload
