@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        key: reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          key: reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
       - run:
           name: Run unit tests
           command: |
@@ -23,26 +23,28 @@ jobs:
     docker:
       - image: gsornsen/python-ci-cd-container:latest
     steps:
+      - checkout
       - restore_cache:
-        keys:
-          - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
-          - wheel-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+            - wheel-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Build python wheel
           command: make build
       - save_cache:
-        key: wheel-{{ .Branch }}-{{ .Revision }}
-        paths:
-          - "build"
-          - "dist"
+          key: wheel-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "build"
+            - "dist"
   deploy-wheel:
     docker:
       - image: gsornsen/python-ci-cd-container:latest
     steps:
+      - checkout
       - restore_cache:
-        keys:
-          - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
-          - wheel-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+            - wheel-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Create .pypirc
           command: |
