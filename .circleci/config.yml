@@ -6,15 +6,64 @@ jobs:
       - image: gsornsen/python-ci-cd-container:latest
     steps:
       - checkout
+      - restore_cache:
+        key: reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
       - run:
           name: Run unit tests
           command: |
             make develop
             make test
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
-
+      - save_cache:
+          key: reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          paths:
+            - "venv"
+            - ".tox"
+  build-wheel:
+    docker:
+      - image: gsornsen/python-ci-cd-container:latest
+    steps:
+      - restore_cache:
+        keys:
+          - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          - wheel-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: Build python wheel
+          command: make build
+      - save_cache:
+        key: wheel-{{ .Branch }}-{{ .Revision }}
+        paths:
+          - "build"
+          - "dist"
+  deploy-wheel:
+    docker:
+      - image: gsornsen/python-ci-cd-container:latest
+    steps:
+      - restore_cache:
+        keys:
+          - reqs-{{ .Branch }}-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          - wheel-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: Create .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = __token__" >> ~/.pypirc
+            echo -e "password = $PYPI_TOKEN" >> ~/.pypirc
+      - run:
+          name: Deploy to PyPi
+          command: make upload
 
 workflows:
   main:
     jobs:
       - unit-tests
+      - build-wheel:
+          requires:
+            - unit-tests
+      - deploy-wheel:
+          requires:
+            - build-wheel
+          filters:
+            branches:
+                only:
+                  - main
