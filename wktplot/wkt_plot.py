@@ -88,21 +88,20 @@ class WKTPlot:
         # self.fig.clf()
         # self.setup_axis()
 
+    def save(self, save_dir):
+        """ TODO: docstring
         """
-
-    def save(self, plot_name):
-        """
-        Save figure to .png image.
-        """
-        self.ax.set_title(plot_name)
-        print(self.ax.get_xlim())
-        plot_name = plot_name.lower().replace(" ", "_")
-        fig_f = os.path.join(self.save_dir, f"{plot_name}.png")
-        if os.path.isfile(fig_f):
-            os.remove(fig_f)
-        self.fig.tight_layout()
-        self.fig.savefig(fig_f)
-        return self
+        output_file(save_dir, title=self.figure.title, mode="inline")
+        save(self.figure)
+        # self.ax.set_title(plot_name)
+        # print(self.ax.get_xlim())
+        # plot_name = plot_name.lower().replace(" ", "_")
+        # fig_f = os.path.join(self.save_dir, f"{plot_name}.png")
+        # if os.path.isfile(fig_f):
+        #     os.remove(fig_f)
+        # self.fig.tight_layout()
+        # self.fig.savefig(fig_f)
+        # return self
 
     def save_wkt(self, wkt, name):
         """ TODO: docstring
