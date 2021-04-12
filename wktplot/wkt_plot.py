@@ -1,3 +1,5 @@
+import logging
+import sys
 import typing as ty
 from bokeh.io import output
 
@@ -7,7 +9,15 @@ from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
 
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s : %(lineno)d - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
+
 class WKTPlot:
+    logger = logging.getLogger(__name__)
 
     def __init__(self, title: str, save_dir: ty.Union[str, Path]):
         """ TODO: docstring
