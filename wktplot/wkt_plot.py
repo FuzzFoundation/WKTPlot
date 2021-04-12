@@ -121,13 +121,6 @@ class WKTPlot:
         # gdf.plot(ax=self.ax, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
         # self.__zorder += 1
 
-    def clear(self):
-        """ TODO: docstring
-        """
-        pass
-        # self.fig.clf()
-        # self.setup_axis()
-
     def save(self):
         """ TODO: docstring
         """
