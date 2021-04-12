@@ -1,24 +1,20 @@
 import os
 import string
+import typing as ty
 
-from descartes import PolygonPatch
-from matplotlib import pyplot
-from matplotlib.colors import CSS4_COLORS as colors_dict
+from time import time
+from bokeh.plotting import figure, show, output_file, save
+from bokeh.models import ColumnDataSource
 from random import choice
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
 
 
 class WKTPlot:
-
-    def __init__(self, save_dir):
-        self.fig = pyplot.figure(1, figsize=(25, 25), dpi=150)
-        self.setup_axis()
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        self.save_dir = save_dir
-        self.wkt_dir = os.path.join(self.save_dir, "wkt")
-        self.__zorder = 1
+    def __init__(self, title: ty.Optional[str]):
+        if title is None:
+            title = f"{int(time())}"
+        self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
 
     def plot_line(self, obj, fill_color):
         """
