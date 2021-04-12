@@ -18,19 +18,11 @@ class WKTPlot:
             title = f"{int(time())}"
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
 
-    def plot_line(self, obj, fill_color):
+    def plot_line(self, obj: LineString):
+        """ TODO: docstring
         """
-        Plot given LineString `obj`, filled with given `color`.
-
-        Args:
-            obj (shapely.LineString): LineString to plot.
-            color (str): Color hex-string from `matplotlib.colors.CSS4_COLORS` dictionary.
-        """
-        if not obj.is_empty:
-            x, y = obj.xy
-            self.ax.plot(
-                x, y, color=fill_color, linewidth=10, solid_capstyle='round', zorder=self.__zorder)
-            self.__zorder += 1
+        x, y = map(list, obj.xy)
+        self.figure.line(x, y, legend_label="Temp.", line_width=3)
 
     def plot_poly(self, obj, fill_color, stroke_color):
         """ TODO: docstring
