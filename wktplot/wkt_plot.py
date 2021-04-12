@@ -29,6 +29,45 @@ class WKTPlot:
         output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
 
+    def add_shape(self, shape, fill_color=None, stroke_color=None, name=None):
+        """ TODO: docstring
+        """
+        pass
+        # if isinstance(shape, str):
+        #     shape = wkt.loads(shape)
+
+        # fill_color = colors_dict.get(fill_color, "#00000000")
+        # stroke_color = colors_dict.get(stroke_color, "#00000000")
+        # if not fill_color and not stroke_color:
+        #     print("No fill or stroke color.")
+        #     return
+
+        # if isinstance(shape, MultiLineString):
+        #     for line_string in shape:
+        #         self.plot_line(line_string, fill_color)
+        # elif isinstance(shape, (LineString, Point)):
+        #     self.plot_line(shape, fill_color)
+        # elif isinstance(shape, MultiPolygon):
+        #     for poly in shape:
+        #         self.plot_poly(poly, fill_color, stroke_color)
+        # elif isinstance(shape, Polygon):
+        #     self.plot_poly(shape, fill_color, stroke_color)
+        # elif isinstance(shape, GeometryCollection):
+        #     for poly in shape:
+        #         self.add_shape(poly, fill_color=fill_color, stroke_color=stroke_color)
+        # else:
+        #     print(type(shape))
+
+        # self.save_wkt(shape.wkt, name)
+
+    def add_shapes(self, shapes_list):
+        """ TODO: docstring
+        """
+        pass
+        # for item in shapes_list:
+        #     self.add_shape(*item)
+        # return self
+
     def plot_points(self, shape: ty.Union[Point, MultiPoint]):
         """ TODO: docstring
         """
@@ -94,45 +133,6 @@ class WKTPlot:
         # stroke_color = colors_dict.get(stroke_color, "#FFFFFFFF")
         # gdf.plot(ax=self.ax, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
         # self.__zorder += 1
-
-    def add_shape(self, shape, fill_color=None, stroke_color=None, name=None):
-        """ TODO: docstring
-        """
-        pass
-        # if isinstance(shape, str):
-        #     shape = wkt.loads(shape)
-
-        # fill_color = colors_dict.get(fill_color, "#00000000")
-        # stroke_color = colors_dict.get(stroke_color, "#00000000")
-        # if not fill_color and not stroke_color:
-        #     print("No fill or stroke color.")
-        #     return
-
-        # if isinstance(shape, MultiLineString):
-        #     for line_string in shape:
-        #         self.plot_line(line_string, fill_color)
-        # elif isinstance(shape, (LineString, Point)):
-        #     self.plot_line(shape, fill_color)
-        # elif isinstance(shape, MultiPolygon):
-        #     for poly in shape:
-        #         self.plot_poly(poly, fill_color, stroke_color)
-        # elif isinstance(shape, Polygon):
-        #     self.plot_poly(shape, fill_color, stroke_color)
-        # elif isinstance(shape, GeometryCollection):
-        #     for poly in shape:
-        #         self.add_shape(poly, fill_color=fill_color, stroke_color=stroke_color)
-        # else:
-        #     print(type(shape))
-
-        # self.save_wkt(shape.wkt, name)
-
-    def add_shapes(self, shapes_list):
-        """ TODO: docstring
-        """
-        pass
-        # for item in shapes_list:
-        #     self.add_shape(*item)
-        # return self
 
     def clear(self):
         """ TODO: docstring
