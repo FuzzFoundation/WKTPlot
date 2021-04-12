@@ -23,6 +23,9 @@ class WKTPlot:
     def plot_line(self, obj: LineString):
         """ TODO: docstring
         """
+        if obj.empty:
+            print("Given shape is empty, returning.")
+            return
         x, y = map(list, obj.xy)
         self.figure.line(x, y, legend_label="Temp.", line_width=3)
 
