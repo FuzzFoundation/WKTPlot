@@ -1,12 +1,11 @@
 import logging
 import sys
 import typing as ty
-from bokeh.io import output
 
 from bokeh.plotting import figure, show, output_file, save
 from pathlib import Path
 from shapely import wkt
-from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
+from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 
 
 logging.basicConfig(
@@ -30,23 +29,62 @@ class WKTPlot:
         output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
 
-    def plot_line(self, obj: LineString):
+    def plot_points(self, shape: ty.Union[Point, MultiPoint]):
         """ TODO: docstring
         """
-        if obj.empty:
-            print("Given shape is empty, returning.")
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
             return
-        x, y = map(list, obj.xy)
-        self.figure.line(x, y, legend_label="Temp.", line_width=3)
 
-    def plot_poly(self, obj, fill_color, stroke_color):
+        x, y = [], []
+        if isinstance(shape, MultiPoint):
+            for point in shape:
+                x += list(point.x)
+                y += list(point.y)
+        elif isinstance(shape, Point):
+            x, y = map(list, shape.xy)
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+    
+        self.figure.circle(x, y, line_width=3)
+
+    def plot_lines(self, shape: ty.Union[LineString, MultiLineString]):
         """ TODO: docstring
         """
-        pass
-        # patch = PolygonPatch(obj, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
-        # self.ax.add_patch(patch)
-        # self.ax.plot()
-        # self.__zorder += 1
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
+            return
+
+        if isinstance(shape, (LineString, LinearRing)):
+            x, y = map(list, shape.xy)
+            self.figure.line(x, y, line_width=3)
+        elif isinstance(shape, MultiLineString):
+            x, y = [], []
+            for line in shape:
+                x += list(line.x)
+                y += list(line.y)
+            self.figure.multi_line(x, y, line_width=3)
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+
+    def plot_polys(self, shape: ty.Union[Polygon, MultiPolygon]):
+        """ TODO: docstring
+        """
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
+            return
+
+        if isinstance(shape, Polygon):
+            x, y = map(list, shape.xy)
+            self.figure.patch(x, y, line_width=3)
+        elif isinstance(shape, MultiPolygon):
+            x, y = [], []
+            for poly in shape:
+                x += list(poly.x)
+                y += list(poly.y)
+            self.figure.multi_polygons(x, y, line_width=3)
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
     def add_geodataframe(self, gdf, fill_color=None, stroke_color=None, name=None):
         """ TODO: docstring
