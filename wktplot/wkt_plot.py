@@ -1,21 +1,23 @@
-import os
-import string
 import typing as ty
+from bokeh.io import output
 
-from time import time
 from bokeh.plotting import figure, show, output_file, save
-from bokeh.models import ColumnDataSource
-from random import choice
+from pathlib import Path
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
 
 
 class WKTPlot:
-    def __init__(self, title: ty.Optional[str]):
+
+    def __init__(self, title: str, save_dir: ty.Union[str, Path]):
         """ TODO: docstring
         """
-        if title is None:
-            title = f"{int(time())}"
+        if isinstance(save_dir, str):
+            save_dir = Path(save_dir)
+        if not save_dir.is_dir():
+            raise OSError("Given argument `save_dir` is not a directory.")
+
+        output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
 
     def plot_line(self, obj: LineString):
@@ -88,10 +90,9 @@ class WKTPlot:
         # self.fig.clf()
         # self.setup_axis()
 
-    def save(self, save_dir):
+    def save(self):
         """ TODO: docstring
         """
-        output_file(save_dir, title=self.figure.title, mode="inline")
         save(self.figure)
         # self.ax.set_title(plot_name)
         # print(self.ax.get_xlim())
