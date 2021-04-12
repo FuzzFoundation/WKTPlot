@@ -54,6 +54,15 @@ class WKTPlot:
         for shape in shapes:
             self.add_shape(shape)
     
+    def save(self):
+        """ TODO: docstring
+        """
+        save(self.figure)
+    
+    def show(self):
+        """ TODO: docstring
+        """
+        show(self.figure)
 
     def plot_points(self, shape: ty.Union[Point, MultiPoint]):
         """ TODO: docstring
@@ -120,20 +129,6 @@ class WKTPlot:
         # stroke_color = colors_dict.get(stroke_color, "#FFFFFFFF")
         # gdf.plot(ax=self.ax, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
         # self.__zorder += 1
-
-    def save(self):
-        """ TODO: docstring
-        """
-        save(self.figure)
-        # self.ax.set_title(plot_name)
-        # print(self.ax.get_xlim())
-        # plot_name = plot_name.lower().replace(" ", "_")
-        # fig_f = os.path.join(self.save_dir, f"{plot_name}.png")
-        # if os.path.isfile(fig_f):
-        #     os.remove(fig_f)
-        # self.fig.tight_layout()
-        # self.fig.savefig(fig_f)
-        # return self
 
     def save_wkt(self, wkt, name):
         """ TODO: docstring
