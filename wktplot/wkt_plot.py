@@ -74,7 +74,7 @@ class WKTPlot:
     
         self.figure.circle(x, y, line_width=3)
 
-    def plot_lines(self, shape: ty.Union[LineString, MultiLineString]):
+    def plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing]):
         """ TODO: docstring
         """
         if shape.is_empty:
