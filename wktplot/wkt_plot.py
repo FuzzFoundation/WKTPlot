@@ -103,13 +103,7 @@ class WKTPlot:
         self.fig.clf()
         self.setup_axis()
 
-    def setup_axis(self):
         """
-        Setup up figure's sub-plot.
-        """
-        label = ''.join((choice(string.ascii_letters) for _ in range(5)))
-        self.ax = self.fig.add_subplot(111, label=label)
-        # self.ax.set_aspect('equal', adjustable="box", anchor="C")
 
     def save(self, plot_name):
         """
