@@ -74,8 +74,8 @@ class WKTPlot:
         x, y = [], []
         if isinstance(shape, MultiPoint):
             for point in shape:
-                x += list(point.x)
-                y += list(point.y)
+                x.append(point.x)
+                y.append(point.y)
         elif isinstance(shape, Point):
             x, y = map(list, shape.xy)
         else:
@@ -96,8 +96,9 @@ class WKTPlot:
         elif isinstance(shape, MultiLineString):
             x, y = [], []
             for line in shape:
-                x += list(line.x)
-                y += list(line.y)
+                _x, _y = map(list, line.xy)
+                x.append(_x)
+                y.append(_y)
             self.figure.multi_line(x, y, line_width=3)
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
