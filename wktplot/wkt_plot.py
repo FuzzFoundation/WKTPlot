@@ -40,11 +40,11 @@ class WKTPlot:
             return
         
         if isinstance(shape, (Point, MultiPoint)):
-            self.plot_points(shape)
+            self._plot_points(shape)
         elif isinstance(shape, (LineString, MultiLineString, LinearRing)):
-            self.plot_lines(shape)
+            self._plot_lines(shape)
         elif isinstance(shape, (Polygon, MultiPolygon)):
-            self.plot_polys(shape)
+            self._plot_polys(shape)
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
@@ -64,7 +64,7 @@ class WKTPlot:
         """
         show(self.figure)
 
-    def plot_points(self, shape: ty.Union[Point, MultiPoint]):
+    def _plot_points(self, shape: ty.Union[str, Point, MultiPoint]):
         """ TODO: docstring
         """
         if shape.is_empty:
@@ -83,7 +83,7 @@ class WKTPlot:
     
         self.figure.circle(x, y, line_width=3)
 
-    def plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing]):
+    def _plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing]):
         """ TODO: docstring
         """
         if shape.is_empty:
@@ -102,7 +102,7 @@ class WKTPlot:
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
-    def plot_polys(self, shape: ty.Union[Polygon, MultiPolygon]):
+    def _plot_polys(self, shape: ty.Union[Polygon, MultiPolygon]):
         """ TODO: docstring
         """
         if shape.is_empty:
