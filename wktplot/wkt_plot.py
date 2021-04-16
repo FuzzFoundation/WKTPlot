@@ -110,17 +110,38 @@ class WKTPlot:
             self.logger.info("Given shape is empty, returning.")
             return
 
-        if isinstance(shape, Polygon):
-            x, y = map(list, shape.xy)
-            self.figure.patch(x, y, line_width=3)
-        elif isinstance(shape, MultiPolygon):
-            x, y = [], []
-            for poly in shape:
-                x += list(poly.x)
-                y += list(poly.y)
-            self.figure.multi_polygons(x, y, line_width=3)
-        else:
+        if not isinstance(shape, (Polygon, MultiPolygon)):
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+
+        x, y = self._get_poly_coordinates(shape)
+        self.figure.multi_polygons([[x]], [[y]], line_width=3)
+    
+    def _get_poly_coordinates(self, shape: ty.Union[Polygon, MultiPolygon]):
+        """ TODO: docstring
+        """
+
+        x, y = [], []
+        if isinstance(shape, MultiPolygon):
+            for poly in shape:
+                poly_x, poly_y = self._get_poly_coordinates(poly)
+                x += poly_x
+                y += poly_y
+            return x, y
+
+        elif isinstance(shape, Polygon):
+            extr_x, extr_y = map(list, shape.exterior.xy)
+            intr_x, intr_y = [], []
+            for i in shape.interiors:
+                _x, _y = map(list, i.xy)
+                intr_x.append(_x[:-1])
+                intr_y.append(_y[:-1])
+            combined_x, combined_y = [extr_x[:-1]], [extr_y[:-1]]
+            combined_x += intr_x
+            combined_y += intr_y
+            return combined_x, combined_y
+        
+        else:
+            raise NotImplementedError(f"Invalid shape: {type(shape).__name__}")
 
     def add_geodataframe(self, gdf, fill_color=None, stroke_color=None, name=None):
         """ TODO: docstring
