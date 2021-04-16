@@ -45,8 +45,11 @@ class WKTPlot:
             self._plot_lines(shape)
         elif isinstance(shape, (Polygon, MultiPolygon)):
             self._plot_polys(shape)
+        elif isinstance(shape, GeometryCollection):
+            for poly in shape:
+                self.add_shape(poly)
         else:
-            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+            raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
     def add_shapes(self, shapes):
         """ TODO: docstring
