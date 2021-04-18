@@ -5,7 +5,7 @@ import typing as ty
 from bokeh.plotting import figure, show, output_file, save
 from pathlib import Path
 from shapely import wkt
-from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
+from shapely.geometry import BaseGeometry, GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 
 
 logging.basicConfig(
@@ -28,8 +28,9 @@ class WKTPlot:
 
         output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
+        self.figure.toolbar.autohide = True
 
-    def add_shape(self, shape: ty.Union[str, GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon]):
+    def add_shape(self, shape: ty.Union[str, BaseGeometry]):
         """ TODO: docstring
         """
         if isinstance(shape, str):
