@@ -8,6 +8,7 @@ shapes = {
     "SinglePoint": "POINT (30 10)",
     "LineString": "LINESTRING (30 10, 10 30, 40 40)",
     "MultiPoint1": "MULTIPOINT ((10 40), (40 30), (20 20), (30 10))",
+    "LinearRing": "LINEARRING (10 20, 20 25, 35 50, 10 20)",
     "MultiPoint2": "MULTIPOINT (10 40, 40 30, 20 20, 30 10)",
     "MultiLineString": "MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))",
     "SolidPolygon": "POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))",
