@@ -51,12 +51,6 @@ class WKTPlot:
                 self.add_shape(poly)
         else:
             raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
-
-    def add_shapes(self, shapes):
-        """ TODO: docstring
-        """
-        for shape in shapes:
-            self.add_shape(shape)
     
     def save(self):
         """ TODO: docstring
