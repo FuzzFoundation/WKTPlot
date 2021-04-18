@@ -144,7 +144,7 @@ class WKTPlot:
             return combined_x, combined_y
         
         else:
-            raise NotImplementedError(f"Invalid shape: {type(shape).__name__}")
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
     def add_geodataframe(self, gdf, fill_color=None, stroke_color=None, name=None):
         """ TODO: docstring
