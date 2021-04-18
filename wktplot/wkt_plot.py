@@ -2,10 +2,11 @@ import logging
 import sys
 import typing as ty
 
-from bokeh.plotting import figure, show, output_file, save
+from bokeh.plotting import figure, output_file, save, show
 from pathlib import Path
 from shapely import wkt
-from shapely.geometry import BaseGeometry, GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
+from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
+from shapely.geometry.base import BaseGeometry
 
 
 logging.basicConfig(
@@ -30,7 +31,7 @@ class WKTPlot:
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
 
-    def add_shape(self, shape: ty.Union[str, BaseGeometry]):
+    def add_shape(self, shape: ty.Union[str, BaseGeometry], **style_kwargs: dict):
         """ TODO: docstring
         """
         if isinstance(shape, str):
@@ -41,14 +42,14 @@ class WKTPlot:
             return
         
         if isinstance(shape, (Point, MultiPoint)):
-            self._plot_points(shape)
+            self._plot_points(shape, **style_kwargs)
         elif isinstance(shape, (LineString, MultiLineString, LinearRing)):
-            self._plot_lines(shape)
+            self._plot_lines(shape, **style_kwargs)
         elif isinstance(shape, (Polygon, MultiPolygon)):
-            self._plot_polys(shape)
+            self._plot_polys(shape, **style_kwargs)
         elif isinstance(shape, GeometryCollection):
             for poly in shape:
-                self.add_shape(poly)
+                self.add_shape(poly, **style_kwargs)
         else:
             raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
     
@@ -62,7 +63,7 @@ class WKTPlot:
         """
         show(self.figure)
 
-    def _plot_points(self, shape: ty.Union[str, Point, MultiPoint]):
+    def _plot_points(self, shape: ty.Union[str, Point, MultiPoint], **style_kwargs: dict):
         """ TODO: docstring
         """
         if shape.is_empty:
@@ -79,9 +80,9 @@ class WKTPlot:
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
     
-        self.figure.circle(x, y, line_width=3)
+        self.figure.circle(x, y, **style_kwargs)
 
-    def _plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing]):
+    def _plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing], **style_kwargs: dict):
         """ TODO: docstring
         """
         if shape.is_empty:
@@ -90,18 +91,18 @@ class WKTPlot:
 
         if isinstance(shape, (LineString, LinearRing)):
             x, y = map(list, shape.xy)
-            self.figure.line(x, y, line_width=3)
+            self.figure.line(x, y, **style_kwargs)
         elif isinstance(shape, MultiLineString):
             x, y = [], []
             for line in shape:
                 _x, _y = map(list, line.xy)
                 x.append(_x)
                 y.append(_y)
-            self.figure.multi_line(x, y, line_width=3)
+            self.figure.multi_line(x, y, **style_kwargs)
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
-    def _plot_polys(self, shape: ty.Union[Polygon, MultiPolygon]):
+    def _plot_polys(self, shape: ty.Union[Polygon, MultiPolygon], **style_kwargs: dict):
         """ TODO: docstring
         """
         if shape.is_empty:
@@ -112,7 +113,7 @@ class WKTPlot:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
         x, y = self._get_poly_coordinates(shape)
-        self.figure.multi_polygons([[x]], [[y]], line_width=3)
+        self.figure.multi_polygons([[x]], [[y]], **style_kwargs)
     
     def _get_poly_coordinates(self, shape: ty.Union[Polygon, MultiPolygon]):
         """ TODO: docstring
