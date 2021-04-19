@@ -25,7 +25,7 @@ class WKTPlot:
         if isinstance(save_dir, str):
             save_dir = Path(save_dir)
         if not save_dir.is_dir():
-            raise OSError("Given argument `save_dir` is not a directory.")
+            raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
         output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")

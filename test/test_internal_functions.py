@@ -15,7 +15,7 @@ class InternalFunctionTests(unittest.TestCase):
     @patch("wktplot.wkt_plot.output_file", Mock())
     @patch("wktplot.wkt_plot.figure", Mock())
     def setup_plot(self, mock_path):
-        mock_path.is_dir.return_value = True
+        mock_path.return_value.is_dir.return_value = True
         plot = WKTPlot(title=PLOT_TITLE, save_dir=PLOT_SAVE_DIR)
         plot.figure.circle.reset_mock()
         plot.figure.line.reset_mock()
