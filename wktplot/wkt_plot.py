@@ -10,7 +10,7 @@ from shapely.geometry.base import BaseGeometry
 
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(name)s : %(lineno)d - %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
