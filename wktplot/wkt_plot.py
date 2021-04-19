@@ -141,26 +141,3 @@ class WKTPlot:
         
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
-
-    def add_geodataframe(self, gdf, fill_color=None, stroke_color=None, name=None):
-        """ TODO: docstring
-        """
-        pass
-        # fill_color = colors_dict.get(fill_color, "#FFFFFFFF")
-        # stroke_color = colors_dict.get(stroke_color, "#FFFFFFFF")
-        # gdf.plot(ax=self.ax, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
-        # self.__zorder += 1
-
-    def save_wkt(self, wkt, name):
-        """ TODO: docstring
-        """
-        pass
-        # if name is not None:
-        #     if not os.path.isdir(self.wkt_dir):
-        #         os.mkdir(self.wkt_dir)
-        #     name = name.lower().replace(" ", "_")
-        #     wkt_f = os.path.join(self.wkt_dir, f"{name}.txt")
-        #     if os.path.isfile(wkt_f):
-        #         os.remove(wkt_f)
-        #     with open(wkt_f, "w+") as wf:
-        #         wf.write(wkt)
