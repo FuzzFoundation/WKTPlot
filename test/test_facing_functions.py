@@ -83,6 +83,14 @@ class FacingFunctionsTests(unittest.TestCase):
             test_plot.add_shape(fake_shape, **STYLE_KWARGS)
         self.assertIn("Given `shape` argument is of an unexpected type [FakeShape]", e.exception.args)
     
+    def test_add_shape__verify_empty_shape_logs_message(self):
+        shape = "POINT EMPTY"
+        test_plot = self.setup_plot()
+        with patch.object(test_plot, "logger") as mock_logger:
+            mock_logger.info.reset_mock()
+            test_plot.add_shape(shape, **STYLE_KWARGS)
+            mock_logger.info.assert_called_once_with("Given shape is empty, returning.")
+    
     @patch("wktplot.wkt_plot.save")
     def test_save__verify_methods_called(self, mock_save):
         test_plot = self.setup_plot()
