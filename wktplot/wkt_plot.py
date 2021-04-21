@@ -1,164 +1,195 @@
-import os
-import string
+import logging
+import sys
+import typing as ty
 
-from descartes import PolygonPatch
-from matplotlib import pyplot
-from matplotlib.colors import CSS4_COLORS as colors_dict
-from random import choice
+from bokeh.plotting import figure, output_file, save, show
+from pathlib import Path
 from shapely import wkt
-from shapely.geometry import GeometryCollection, LineString, MultiLineString, MultiPolygon, Point, Polygon
-
-"""
-from wkt_plot import WKTPLOT
-
-a = Polygon(...)
-b = MultiPolygon(...)
-c = LineString(...)
-d = MultiLineString(...)
-e = "LINESTRING (30 10, 10 30, 40 40)"
-
-plot = WKTPLOT("path/to/save/directory")
-plot.add_shape(a, "crimson", "A Poly")
-plot.add_shape(c, "dimgray", "C Line")
-plot.add_shape(e, "cornflowerblue", "E Line")
-plot.save("A with C with E")
-plot.clear()
-
-plot.add_shapes([
-    (b, "magenta"),
-    (c, "turquoise"),
-    (d, "forestgreen")
-]).save("BCD").clear()
-"""
+from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
+from shapely.geometry.base import BaseGeometry
 
 
-class WKTPLOT:
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(name)s : %(lineno)d - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 
-    def __init__(self, save_dir):
-        self.fig = pyplot.figure(1, figsize=(25, 25), dpi=150)
-        self.setup_axis()
-        if not os.path.isdir(save_dir):
-            os.makedirs(save_dir)
-        self.save_dir = save_dir
-        self.wkt_dir = os.path.join(self.save_dir, "wkt")
-        self.__zorder = 1
 
-    def plot_line(self, obj, fill_color):
-        """
-        Plot given LineString `obj`, filled with given `color`.
+class WKTPlot:
+    logger = logging.getLogger(__name__)
 
+    def __init__(self, title: str, save_dir: ty.Union[str, Path]):
+        """ Constructor for WKTPlot class.
+    
         Args:
-            obj (shapely.LineString): LineString to plot.
-            color (str): Color hex-string from `matplotlib.colors.CSS4_COLORS` dictionary.
+            title (str): Title for graph and output filename.
+                e.g. title = "Test 123 ABC" -> filename = "test_123_abc.html"
+            save_dir (str | obj: Path): Path to save output file to.
+        
+        Raises:
+            OSError: If value for `save_dir` is not a directory.
         """
-        if not obj.is_empty:
-            x, y = obj.xy
-            self.ax.plot(
-                x, y, color=fill_color, linewidth=10, solid_capstyle='round', zorder=self.__zorder)
-            self.__zorder += 1
+        if isinstance(save_dir, str):
+            save_dir = Path(save_dir)
+        if not save_dir.is_dir():
+            raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-    def plot_poly(self, obj, fill_color, stroke_color):
-        """
-        Plot given Polygon `obj`, filled with given `color`, and a white edge color.
+        output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
+        self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
+        self.figure.toolbar.autohide = True
 
+    def add_shape(self, shape: ty.Union[str, BaseGeometry], **style_kwargs: dict):
+        """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are: `GeometryCollection`, `LineString`,
+        `LinearRing`, `MultiLineString`, `MultiPoint`, `MultiPolygon`, `Point`, and `Polygon`.
+    
         Args:
-            obj (shapely.Polygon): Polygon to plot.
-            color (str): Color hex-string from `matplotlib.colors.CSS4_COLORS` dictionary.
-        """
-        patch = PolygonPatch(obj, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
-        self.ax.add_patch(patch)
-        self.ax.plot()
-        self.__zorder += 1
-
-    def add_geodataframe(self, gdf, fill_color=None, stroke_color=None, name=None):
-        fill_color = colors_dict.get(fill_color, "#FFFFFFFF")
-        stroke_color = colors_dict.get(stroke_color, "#FFFFFFFF")
-        gdf.plot(ax=self.ax, fc=fill_color, ec=stroke_color, zorder=self.__zorder)
-        self.__zorder += 1
-
-    def add_shape(self, shape, fill_color=None, stroke_color=None, name=None):
-        """
-        Add given `shape` to created figure, filled with the given `color`. Save `shape`'s WKT to
-        txt file with given `name`, if `name` is not None.
-
-        Args:
-            shape (str, obj: shapely.geometry): Shape to plot.
-            color (str): Color name for shape. Looked up in 'matplotlib.colors.CSS4_COLORS' dict.
-                e.g. 'gold' --> '#FFD700', 'aquamarine' --> '#7FFFD4'
-            name (optional, default=None): Name of WKT text file to save shape to. Saves to class
-            variable `save_dir` in 'WKT' subfolder.
+            shape (str | obj: BaseGeometry): Shape to plot. If given as string, value will be sent to `shapely.wkt.loads`.
+            **style_kwargs (dict): Dictionary of attributes to style the given shape.
+                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+    
+        Raises:
+            TypeError: When given `shape` type is not currently supported.
         """
         if isinstance(shape, str):
             shape = wkt.loads(shape)
-
-        fill_color = colors_dict.get(fill_color, "#00000000")
-        stroke_color = colors_dict.get(stroke_color, "#00000000")
-        if not fill_color and not stroke_color:
-            print("No fill or stroke color.")
+        
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
             return
-
-        if isinstance(shape, MultiLineString):
-            for line_string in shape:
-                self.plot_line(line_string, fill_color)
-        elif isinstance(shape, (LineString, Point)):
-            self.plot_line(shape, fill_color)
-        elif isinstance(shape, MultiPolygon):
-            for poly in shape:
-                self.plot_poly(poly, fill_color, stroke_color)
-        elif isinstance(shape, Polygon):
-            self.plot_poly(shape, fill_color, stroke_color)
+        
+        if isinstance(shape, (Point, MultiPoint)):
+            self._plot_points(shape, **style_kwargs)
+        elif isinstance(shape, (LineString, MultiLineString, LinearRing)):
+            self._plot_lines(shape, **style_kwargs)
+        elif isinstance(shape, (Polygon, MultiPolygon)):
+            self._plot_polys(shape, **style_kwargs)
         elif isinstance(shape, GeometryCollection):
             for poly in shape:
-                self.add_shape(poly, fill_color=fill_color, stroke_color=stroke_color)
+                self.add_shape(poly, **style_kwargs)
         else:
-            print(type(shape))
+            raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+    
+    def save(self):
+        """ Wrapper method around `bokeh.plotting.save`.
 
-        self.save_wkt(shape.wkt, name)
+        See source for more info: https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.save
+        """
+        save(self.figure)
+    
+    def show(self):
+        """ Wrapper method around `bokeh.plotting.show`.
 
-    def add_shapes(self, shapes_list):
+        See source for more info: https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.show
         """
-        Bulk plot multiple shapes.
-        """
-        for item in shapes_list:
-            self.add_shape(*item)
-        return self
+        show(self.figure)
 
-    def clear(self):
-        """
-        Clear current figure and initialize new axis.
-        """
-        self.fig.clf()
-        self.setup_axis()
+    def _plot_points(self, shape: ty.Union[str, Point, MultiPoint], **style_kwargs: dict):
+        """ Internal method for plotting given non-empty, Point or MultiPoint `shape` object.
 
-    def setup_axis(self):
+        Args:
+            shape (str | obj: Point | obj: MultiPoint): Shape to plot.
+            **style_kwargs (dict): Dictionary of attributes to style the given shape.
+                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+        
+        Raises:
+            TypeError: When given `shape` is not a `Point` or `MultiPoint` shapely geometry.
         """
-        Setup up figure's sub-plot.
-        """
-        label = ''.join((choice(string.ascii_letters) for _ in range(5)))
-        self.ax = self.fig.add_subplot(111, label=label)
-        # self.ax.set_aspect('equal', adjustable="box", anchor="C")
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
+            return
 
-    def save(self, plot_name):
-        """
-        Save figure to .png image.
-        """
-        self.ax.set_title(plot_name)
-        print(self.ax.get_xlim())
-        plot_name = plot_name.lower().replace(" ", "_")
-        fig_f = os.path.join(self.save_dir, f"{plot_name}.png")
-        if os.path.isfile(fig_f):
-            os.remove(fig_f)
-        self.fig.tight_layout()
-        self.fig.savefig(fig_f)
-        return self
+        x, y = [], []
+        if isinstance(shape, MultiPoint):
+            for point in shape:
+                x.append(point.x)
+                y.append(point.y)
+        elif isinstance(shape, Point):
+            x, y = map(list, shape.xy)
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+    
+        self.figure.circle(x, y, **style_kwargs)
 
-    def save_wkt(self, wkt, name):
-        if name is not None:
-            if not os.path.isdir(self.wkt_dir):
-                os.mkdir(self.wkt_dir)
-            name = name.lower().replace(" ", "_")
-            wkt_f = os.path.join(self.wkt_dir, f"{name}.txt")
-            if os.path.isfile(wkt_f):
-                os.remove(wkt_f)
-            with open(wkt_f, "w+") as wf:
-                wf.write(wkt)
+    def _plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing], **style_kwargs: dict):
+        """ Internal method for plotting given non-empty, LineString, MultiLineString, or LinearRing `shape` object.
+
+        Args:
+            shape (str | obj: LineString | obj: MultiLineString, | obj: LinearRing): Shape to plot.
+            **style_kwargs (dict): Dictionary of attributes to style the given shape.
+                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+        
+        Raises:
+            TypeError: When given `shape` is not a `LineString`, `MultiLineString`, or `LinearRing` shapely geometry.
+        """
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
+            return
+
+        if isinstance(shape, (LineString, LinearRing)):
+            x, y = map(list, shape.xy)
+            self.figure.line(x, y, **style_kwargs)
+        elif isinstance(shape, MultiLineString):
+            x, y = [], []
+            for line in shape:
+                _x, _y = map(list, line.xy)
+                x.append(_x)
+                y.append(_y)
+            self.figure.multi_line(x, y, **style_kwargs)
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+
+    def _plot_polys(self, shape: ty.Union[Polygon, MultiPolygon], **style_kwargs: dict):
+        """ Internal method for plotting given non-empty, Polygon or MultiPolygon `shape` object.
+
+        Args:
+            shape (str | obj: Polygon | obj: MultiPolygon): Shape to plot.
+            **style_kwargs (dict): Dictionary of attributes to style the given shape.
+                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+        
+        Raises:
+            TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
+        """
+        if shape.is_empty:
+            self.logger.info("Given shape is empty, returning.")
+            return
+
+        if not isinstance(shape, (Polygon, MultiPolygon)):
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+
+        x, y = self._get_poly_coordinates(shape)
+        self.figure.multi_polygons([[x]], [[y]], **style_kwargs)
+    
+    def _get_poly_coordinates(self, shape: ty.Union[Polygon, MultiPolygon]):
+        """ Internal method for translating shapely polygon coordinates to bokeh polygon plotting coordinates.
+        
+        See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html#multiple-multi-polygons
+
+        Args:
+            shape (str | obj: Polygon | obj: MultiPolygon): Shape to plot.
+        
+        Raises:
+            TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
+        """
+        x, y = [], []
+        if isinstance(shape, MultiPolygon):
+            for poly in shape:
+                poly_x, poly_y = self._get_poly_coordinates(poly)
+                x += poly_x
+                y += poly_y
+            return x, y
+
+        elif isinstance(shape, Polygon):
+            extr_x, extr_y = map(list, shape.exterior.xy)
+            intr_x, intr_y = [], []
+            for i in shape.interiors:
+                _x, _y = map(list, i.xy)
+                intr_x.append(_x[:-1])
+                intr_y.append(_y[:-1])
+            combined_x, combined_y = [extr_x[:-1]], [extr_y[:-1]]
+            combined_x += intr_x
+            combined_y += intr_y
+            return combined_x, combined_y
+        
+        else:
+            raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
