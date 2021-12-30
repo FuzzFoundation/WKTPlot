@@ -1,6 +1,6 @@
 from shapely import wkt
 from unittest.mock import Mock, patch
-from wktplot.wkt_plot import WKTPlot
+from wktplot import WKTPlot
 
 import logging
 import unittest
@@ -11,9 +11,9 @@ STYLE_KWARGS = {"color": "MidnightBlue", "line_width": 3.0}
 
 class InternalFunctionTests(unittest.TestCase):
 
-    @patch("wktplot.wkt_plot.Path")
-    @patch("wktplot.wkt_plot.output_file", Mock())
-    @patch("wktplot.wkt_plot.figure", Mock())
+    @patch("wktplot.Path")
+    @patch("wktplot.output_file", Mock())
+    @patch("wktplot.figure", Mock())
     def setup_plot(self, mock_path):
         mock_path.return_value.is_dir.return_value = True
         plot = WKTPlot(title=PLOT_TITLE, save_dir=PLOT_SAVE_DIR)

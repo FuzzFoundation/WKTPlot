@@ -2,7 +2,7 @@ from pathlib import Path
 from shapely.geometry.base import BaseGeometry
 from shapely import wkt
 from unittest.mock import Mock, patch, DEFAULT
-from wktplot.wkt_plot import WKTPlot
+from wktplot import WKTPlot
 
 import unittest
 
@@ -20,9 +20,9 @@ class FakeShape(BaseGeometry):
 
 class FacingFunctionsTests(unittest.TestCase):
 
-    @patch("wktplot.wkt_plot.Path")
-    @patch("wktplot.wkt_plot.output_file", Mock())
-    @patch("wktplot.wkt_plot.figure", Mock())
+    @patch("wktplot.Path")
+    @patch("wktplot.output_file", Mock())
+    @patch("wktplot.figure", Mock())
     def setup_plot(self, mock_path):
         mock_path.is_dir.return_value = True
         plot = WKTPlot(title=PLOT_TITLE, save_dir=PLOT_SAVE_DIR)
@@ -33,9 +33,9 @@ class FacingFunctionsTests(unittest.TestCase):
             WKTPlot(title=PLOT_TITLE, save_dir=PLOT_SAVE_DIR)
         self.assertIn(f"Given argument `save_dir` is not a directory. [{PLOT_SAVE_DIR}]", e.exception.args)
 
-    @patch("wktplot.wkt_plot.Path", spec=Path)
-    @patch("wktplot.wkt_plot.output_file")
-    @patch("wktplot.wkt_plot.figure")
+    @patch("wktplot.Path", spec=Path)
+    @patch("wktplot.output_file")
+    @patch("wktplot.figure")
     def test_constructor__verify_methods_called(self, mock_figure, mock_output, mock_path):
         expected_output_file = f"{PLOT_SAVE_DIR}/michael_plot_abc123.html"
         mock_path.return_value.is_dir.return_value = True
@@ -91,13 +91,13 @@ class FacingFunctionsTests(unittest.TestCase):
             test_plot.add_shape(shape, **STYLE_KWARGS)
             mock_logger.info.assert_called_once_with("Given shape is empty, returning.")
     
-    @patch("wktplot.wkt_plot.save")
+    @patch("wktplot.save")
     def test_save__verify_methods_called(self, mock_save):
         test_plot = self.setup_plot()
         test_plot.save()
         mock_save.assert_called_once_with(test_plot.figure)
     
-    @patch("wktplot.wkt_plot.show")
+    @patch("wktplot.show")
     def test_show__verify_methods_called(self, mock_show):
         test_plot = self.setup_plot()
         test_plot.show()
