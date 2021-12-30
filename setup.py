@@ -16,8 +16,8 @@ setup(
     url="https://github.com/FuzzFoundation/WKTPlot",
     packages=find_packages(),
     install_requires=[
-        "descartes>=1.1.0",
-        "Shapely>=1.7.1"
+        "descartes",
+        "Shapely",
     ],
     python_requires=">=3.7",
     classifiers=[
