@@ -92,8 +92,8 @@ class InternalFunctionTests(unittest.TestCase):
         """
 
         shape = wkt.loads("MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))")
-        expected_x = [[10, 20, 10], [40, 30, 40, 30]]
-        expected_y = [[10, 20, 40], [40, 30, 20, 10]]
+        expected_x = [ [10, 20, 10], [40, 30, 40, 30] ]
+        expected_y = [ [10, 20, 40], [40, 30, 20, 10] ]
         with tempfile.TemporaryDirectory() as temp_dir:
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             plot._plot_lines(shape, **STYLE_KWARGS)
@@ -128,8 +128,8 @@ class InternalFunctionTests(unittest.TestCase):
         """
         
         shape = wkt.loads("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
-        expected_x = [[30.0, 40.0, 20.0, 10.0]]
-        expected_y = [[10.0, 40.0, 40.0, 20.0]]
+        expected_x = [ [30.0, 40.0, 20.0, 10.0] ]
+        expected_y = [ [10.0, 40.0, 40.0, 20.0] ]
         with tempfile.TemporaryDirectory() as temp_dir:
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             with patch.object(plot, "_get_poly_coordinates", Mock(return_value=(expected_x, expected_y))):
@@ -142,8 +142,8 @@ class InternalFunctionTests(unittest.TestCase):
         """
         
         shape = wkt.loads("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))")
-        expected_x = [[30.0, 45.0, 10.0], [15.0, 40.0, 10.0, 5.0]]
-        expected_y = [[20.0, 40.0, 40.0], [5.0, 10.0, 20.0, 10.0]]
+        expected_x = [ [30.0, 45.0, 10.0], [15.0, 40.0, 10.0, 5.0] ]
+        expected_y = [ [20.0, 40.0, 40.0], [5.0, 10.0, 20.0, 10.0] ]
         with tempfile.TemporaryDirectory() as temp_dir:
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             with patch.object(plot, "_get_poly_coordinates", Mock(return_value=(expected_x, expected_y))):
@@ -160,8 +160,7 @@ class InternalFunctionTests(unittest.TestCase):
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             plot._plot_polys(empty_shape, **STYLE_KWARGS)
             plot.figure.multi_polygons.assert_not_called()
-    
-    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
+
     def test__poly_polys__verify_unexpected_shape_raises_TypeError(self):
         """ Verify `_plot_polys` raises TypeError when given unexpected shape.
         """
@@ -173,8 +172,9 @@ class InternalFunctionTests(unittest.TestCase):
                 plot._plot_polys(invalid_shape, **STYLE_KWARGS)
 
     # --- _get_poly_coordinates tests ---
-    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test__get_poly_coordinates__verify_output_solid_polygon(self):
+        """ Verify `_get_poly_coordinates` returns expected values when given solid shape.
+        """
         
         shape = wkt.loads("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
         expected_x = [ [30.0, 40.0, 20.0, 10.0] ]
@@ -186,6 +186,8 @@ class InternalFunctionTests(unittest.TestCase):
             self.assertEqual(y, expected_y)
 
     def test__get_poly_coordinates__verify_output_hollow_polygon(self):
+        """ Verify `_get_poly_coordinates` returns expected values when given hollow shape.
+        """
 
         shape = wkt.loads("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10), (20 30, 35 35, 30 20, 20 30))")
         expected_x = [ [35.0, 45.0, 15.0, 10.0], [20.0, 35.0, 30.0] ]
@@ -197,6 +199,8 @@ class InternalFunctionTests(unittest.TestCase):
             self.assertEqual(y, expected_y)
     
     def test__get_poly_coordinates__verify_output_solid_multipolygon(self):
+        """ Verify `_get_poly_coordinates` returns expected values when multiple solid shapes.
+        """
         
         shape = wkt.loads("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))")
         expected_x = [ [30.0, 45.0, 10.0], [15.0, 40.0, 10.0, 5.0] ]
@@ -208,6 +212,8 @@ class InternalFunctionTests(unittest.TestCase):
             self.assertEqual(y, expected_y)
 
     def test__get_poly_coordinates__verify_output_hollow_multipolygon(self):
+        """ Verify `_get_poly_coordinates` returns expected values when multiple hollow shapes.
+        """
         
         shape = wkt.loads("MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))")
         expected_x = [ [40.0, 20.0, 45.0], [20.0, 10.0, 10.0, 30.0, 45.0], [30.0, 20.0, 20.0] ]
