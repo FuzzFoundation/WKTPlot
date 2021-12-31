@@ -11,8 +11,9 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            python3 -m pip install .[test]
-            python3 -m tox
+            python -m virtualenv -p python3.9 venv
+            venv/bin/python -m pip install .[test]
+            venv/bin/python -m tox
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
       - save_cache:
           key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
@@ -33,8 +34,8 @@ jobs:
       - run:
           name: Build python wheel
           command: |
-            python3 -m pip install build
-            python3 -m build
+            venv/bin/python -m pip install build
+            venv/bin/python -m build
       - save_cache:
           key: wheel-{{ .Branch }}-{{ .Revision }}
           paths:
