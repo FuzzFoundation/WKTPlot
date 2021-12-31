@@ -11,8 +11,9 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            make develop
-            make test
+            python3.9 -m pip install --editable .[test]
+            python3.9 -m tox
+            python3.9 -m flake8 .
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
       - save_cache:
           key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
@@ -32,7 +33,9 @@ jobs:
             - wheel-{{ .Branch }}-{{ .Revision }}
       - run:
           name: Build python wheel
-          command: make build
+          command: |
+            python3.9 -m pip install build
+            python3.9 -m build
       - save_cache:
           key: wheel-{{ .Branch }}-{{ .Revision }}
           paths:
