@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Run unit tests
           command: |
+            make init
             make develop
             make test
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
