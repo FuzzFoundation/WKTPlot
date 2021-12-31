@@ -1,12 +1,12 @@
 import logging
 import sys
-import typing as ty
 
 from bokeh.plotting import figure, output_file, save, show
 from pathlib import Path
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
 from shapely.geometry.base import BaseGeometry
+from typing import Union
 
 
 logging.basicConfig(
@@ -19,7 +19,7 @@ logging.basicConfig(
 class WKTPlot:
     logger = logging.getLogger(__name__)
 
-    def __init__(self, title: str, save_dir: ty.Union[str, Path]):
+    def __init__(self, title: str, save_dir: Union[str, Path]):
         """ Constructor for WKTPlot class.
     
         Args:
@@ -30,6 +30,7 @@ class WKTPlot:
         Raises:
             OSError: If value for `save_dir` is not a directory.
         """
+
         if isinstance(save_dir, str):
             save_dir = Path(save_dir)
         if not save_dir.is_dir():
@@ -39,7 +40,7 @@ class WKTPlot:
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
 
-    def add_shape(self, shape: ty.Union[str, BaseGeometry], **style_kwargs: dict):
+    def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict):
         """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are: `GeometryCollection`, `LineString`,
         `LinearRing`, `MultiLineString`, `MultiPoint`, `MultiPolygon`, `Point`, and `Polygon`.
     
@@ -51,6 +52,7 @@ class WKTPlot:
         Raises:
             TypeError: When given `shape` type is not currently supported.
         """
+
         if isinstance(shape, str):
             shape = wkt.loads(shape)
         
@@ -75,6 +77,7 @@ class WKTPlot:
 
         See source for more info: https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.save
         """
+
         save(self.figure)
     
     def show(self):
@@ -82,9 +85,10 @@ class WKTPlot:
 
         See source for more info: https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.show
         """
+
         show(self.figure)
 
-    def _plot_points(self, shape: ty.Union[str, Point, MultiPoint], **style_kwargs: dict):
+    def _plot_points(self, shape: Union[str, Point, MultiPoint], **style_kwargs: dict):
         """ Internal method for plotting given non-empty, Point or MultiPoint `shape` object.
 
         Args:
@@ -95,13 +99,14 @@ class WKTPlot:
         Raises:
             TypeError: When given `shape` is not a `Point` or `MultiPoint` shapely geometry.
         """
+
         if shape.is_empty:
             self.logger.info("Given shape is empty, returning.")
             return
 
         x, y = [], []
         if isinstance(shape, MultiPoint):
-            for point in shape:
+            for point in shape.geoms:
                 x.append(point.x)
                 y.append(point.y)
         elif isinstance(shape, Point):
@@ -111,7 +116,7 @@ class WKTPlot:
     
         self.figure.circle(x, y, **style_kwargs)
 
-    def _plot_lines(self, shape: ty.Union[LineString, MultiLineString, LinearRing], **style_kwargs: dict):
+    def _plot_lines(self, shape: Union[LineString, MultiLineString, LinearRing], **style_kwargs: dict):
         """ Internal method for plotting given non-empty, LineString, MultiLineString, or LinearRing `shape` object.
 
         Args:
@@ -122,6 +127,7 @@ class WKTPlot:
         Raises:
             TypeError: When given `shape` is not a `LineString`, `MultiLineString`, or `LinearRing` shapely geometry.
         """
+
         if shape.is_empty:
             self.logger.info("Given shape is empty, returning.")
             return
@@ -131,7 +137,7 @@ class WKTPlot:
             self.figure.line(x, y, **style_kwargs)
         elif isinstance(shape, MultiLineString):
             x, y = [], []
-            for line in shape:
+            for line in shape.geoms:
                 _x, _y = map(list, line.xy)
                 x.append(_x)
                 y.append(_y)
@@ -139,7 +145,7 @@ class WKTPlot:
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
-    def _plot_polys(self, shape: ty.Union[Polygon, MultiPolygon], **style_kwargs: dict):
+    def _plot_polys(self, shape: Union[Polygon, MultiPolygon], **style_kwargs: dict):
         """ Internal method for plotting given non-empty, Polygon or MultiPolygon `shape` object.
 
         Args:
@@ -150,6 +156,7 @@ class WKTPlot:
         Raises:
             TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
         """
+
         if shape.is_empty:
             self.logger.info("Given shape is empty, returning.")
             return
@@ -160,7 +167,7 @@ class WKTPlot:
         x, y = self._get_poly_coordinates(shape)
         self.figure.multi_polygons([[x]], [[y]], **style_kwargs)
     
-    def _get_poly_coordinates(self, shape: ty.Union[Polygon, MultiPolygon]):
+    def _get_poly_coordinates(self, shape: Union[Polygon, MultiPolygon]):
         """ Internal method for translating shapely polygon coordinates to bokeh polygon plotting coordinates.
         
         See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html#multiple-multi-polygons
@@ -171,9 +178,10 @@ class WKTPlot:
         Raises:
             TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
         """
+
         x, y = [], []
         if isinstance(shape, MultiPolygon):
-            for poly in shape:
+            for poly in shape.geoms:
                 poly_x, poly_y = self._get_poly_coordinates(poly)
                 x += poly_x
                 y += poly_y
