@@ -1,37 +1,32 @@
-from setuptools import find_packages, setup
-from wktplot import __version__
+from pathlib import Path
+from setuptools import setup
+from typing import List
 
-with open("README.md", "r") as f:
-    readme = f.read()
+REQUIREMENTS_FILE = Path(__file__).parent / "requirements.txt"
+REQUIREMENTS_DEV_FILE = Path(__file__).parent / "requirements-dev.txt"
+README_FILE = Path(__file__).parent / "README.md"
+
+
+def read_file(filepath: Path) -> List[str]:
+    """ Read given `filepath` and return contents as list of strings.
+
+    Args:
+        filepath (obj: Path): Path to file.
+
+    Returns:
+        list[str]: File contents as list of strings.
+    """
+
+    contents: List[str] = []
+    with filepath.open("r") as f:
+        contents = f.readlines()
+    return contents
+
 
 setup(
-    name="wktplot",
-    version=__version__,
-    license="MIT",
-    author="Michael Simpson, Gerald Sornsen",
-    author_email="mikeysimpson4@gmail.com, gerald@sornsen.io",
-    description="Python wrapper for visualiation of shapely geometries.",
-    long_description=readme,
-    long_description_content_type="text/markdown",
-    url="https://github.com/FuzzFoundation/WKTPlot",
-    packages=find_packages(),
-    install_requires=[
-        "descartes",
-        "Shapely",
-    ],
-    python_requires=">=3.7",
-    classifiers=[
-      "License :: OSI Approved :: MIT License",
-      "Programming Language :: Python",
-      "Programming Language :: Python :: 3.7",
-      "Programming Language :: Python :: 3.8",
-      "Programming Language :: Python :: 3.9",
-      "Natural Language :: English",
-      "Operating System :: OS Independent",
-      "Development Status :: 5 - Production/Stable",
-      "Intended Audience :: Developers",
-      "Topic :: Software Development :: Libraries"],
-    keywords="shapely matplotlib GeoDataframes geometries",
-    include_package_data=True,
-    platforms="Posix; MacOS X; Windows"
+    long_description="\n".join(read_file(README_FILE)),
+    install_requires=read_file(REQUIREMENTS_FILE),
+    extras_require={
+        "test": read_file(REQUIREMENTS_DEV_FILE),
+    },
 )
