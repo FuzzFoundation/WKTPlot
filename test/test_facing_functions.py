@@ -9,10 +9,10 @@ from wktplot import WKTPlot
 import tempfile
 import unittest
 
-
 PLOT_TITLE = "Michael Plot ABC123"
 PLOT_FILE = "michael_plot_abc123.html"
 STYLE_KWARGS = {"color": "MidnightBlue", "line_width": 3.0}
+
 
 class FakeShape(BaseGeometry):
     """ Fake shapely shape to test NotImplementedError unittests.
@@ -23,9 +23,8 @@ class FakeShape(BaseGeometry):
         return False
 
 
-
 class FacingFunctionsTests(unittest.TestCase):
-    
+
     def test_constructor__verify_invalid_save_dir_raises_OSError(self):
         """ Verify `WKTPlot.__init__` raises OSError when given an invalid `save_dir` value.
         """
@@ -103,7 +102,7 @@ class FacingFunctionsTests(unittest.TestCase):
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             with self.assertRaises(NotImplementedError):
                 plot.add_shape(fake_shape, **STYLE_KWARGS)
-    
+
     def test_add_shape__verify_empty_shape_returns(self):
         """ Verify `add_shape` returns early when given an empty shape.
         """
@@ -116,7 +115,7 @@ class FacingFunctionsTests(unittest.TestCase):
                 mock_methods["_plot_points"].assert_not_called()
                 mock_methods["_plot_lines"].assert_not_called()
                 mock_methods["_plot_polys"].assert_not_called()
-    
+
     @patch("wktplot.wktplot.save")
     def test_save__verify_methods_called(self, mock_save):
         """ Verify `save` method calls method with expected arguments.
@@ -126,7 +125,7 @@ class FacingFunctionsTests(unittest.TestCase):
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             plot.save()
             mock_save.assert_called_once_with(plot.figure)
-    
+
     @patch("wktplot.wktplot.show")
     def test_show__verify_methods_called(self, mock_show):
         """ Verify `show` method calls method with expected arguments.

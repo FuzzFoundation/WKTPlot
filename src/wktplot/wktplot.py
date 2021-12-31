@@ -4,7 +4,8 @@ import sys
 from bokeh.plotting import figure, output_file, save, show
 from pathlib import Path
 from shapely import wkt
-from shapely.geometry import GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon
+from shapely.geometry import (
+    GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon)
 from shapely.geometry.base import BaseGeometry
 from typing import Union
 
@@ -21,12 +22,12 @@ class WKTPlot:
 
     def __init__(self, title: str, save_dir: Union[str, Path]):
         """ Constructor for WKTPlot class.
-    
+
         Args:
             title (str): Title for graph and output filename.
                 e.g. title = "Test 123 ABC" -> filename = "test_123_abc.html"
             save_dir (str | obj: Path): Path to save output file to.
-        
+
         Raises:
             OSError: If value for `save_dir` is not a directory.
         """
@@ -42,25 +43,27 @@ class WKTPlot:
         self.figure.toolbar.autohide = True
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict):
-        """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are: `GeometryCollection`, `LineString`,
-        `LinearRing`, `MultiLineString`, `MultiPoint`, `MultiPolygon`, `Point`, and `Polygon`.
-    
+        """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are:
+            `GeometryCollection`, `LineString`, `LinearRing`, `MultiLineString`, `MultiPoint`, `MultiPolygon`,
+            `Point`, and `Polygon`.
+
         Args:
-            shape (str | obj: BaseGeometry): Shape to plot. If given as string, value will be sent to `shapely.wkt.loads`.
+            shape (str | obj: BaseGeometry): Shape to plot.
             **style_kwargs (dict): Dictionary of attributes to style the given shape.
-                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
-    
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+
         Raises:
             TypeError: When given `shape` type is not currently supported.
         """
 
         if isinstance(shape, str):
             shape = wkt.loads(shape)
-        
+
         if shape.is_empty:
             self.logger.info("Given shape is empty, returning.")
             return
-        
+
         if isinstance(shape, (Point, MultiPoint)):
             self._plot_points(shape, **style_kwargs)
         elif isinstance(shape, (LineString, MultiLineString, LinearRing)):
@@ -72,7 +75,7 @@ class WKTPlot:
                 self.add_shape(poly, **style_kwargs)
         else:
             raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
-    
+
     def save(self):
         """ Wrapper method around `bokeh.plotting.save`.
 
@@ -80,7 +83,7 @@ class WKTPlot:
         """
 
         save(self.figure)
-    
+
     def show(self):
         """ Wrapper method around `bokeh.plotting.show`.
 
@@ -95,8 +98,9 @@ class WKTPlot:
         Args:
             shape (str | obj: Point | obj: MultiPoint): Shape to plot.
             **style_kwargs (dict): Dictionary of attributes to style the given shape.
-                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
-        
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+
         Raises:
             TypeError: When given `shape` is not a `Point` or `MultiPoint` shapely geometry.
         """
@@ -114,7 +118,7 @@ class WKTPlot:
             x, y = map(list, shape.xy)
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
-    
+
         self.figure.circle(x, y, **style_kwargs)
 
     def _plot_lines(self, shape: Union[LineString, MultiLineString, LinearRing], **style_kwargs: dict):
@@ -123,8 +127,9 @@ class WKTPlot:
         Args:
             shape (str | obj: LineString | obj: MultiLineString, | obj: LinearRing): Shape to plot.
             **style_kwargs (dict): Dictionary of attributes to style the given shape.
-                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
-        
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+
         Raises:
             TypeError: When given `shape` is not a `LineString`, `MultiLineString`, or `LinearRing` shapely geometry.
         """
@@ -152,8 +157,9 @@ class WKTPlot:
         Args:
             shape (str | obj: Polygon | obj: MultiPolygon): Shape to plot.
             **style_kwargs (dict): Dictionary of attributes to style the given shape.
-                See this guide for available style attributes: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
-        
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+
         Raises:
             TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
         """
@@ -167,15 +173,16 @@ class WKTPlot:
 
         x, y = self._get_poly_coordinates(shape)
         self.figure.multi_polygons([[x]], [[y]], **style_kwargs)
-    
+
     def _get_poly_coordinates(self, shape: Union[Polygon, MultiPolygon]):
         """ Internal method for translating shapely polygon coordinates to bokeh polygon plotting coordinates.
-        
-        See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html#multiple-multi-polygons
+
+        See this guide for more info:
+        https://docs.bokeh.org/en/latest/docs/user_guide/plotting.html#multiple-multi-polygons
 
         Args:
             shape (str | obj: Polygon | obj: MultiPolygon): Shape to plot.
-        
+
         Raises:
             TypeError: When given `shape` is not a `Polygon` or `MultiPolygon` shapely geometry.
         """
@@ -199,6 +206,6 @@ class WKTPlot:
             combined_x += intr_x
             combined_y += intr_y
             return combined_x, combined_y
-        
+
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
