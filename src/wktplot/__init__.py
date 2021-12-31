@@ -1,3 +1,3 @@
-from wktplot import wktplot  # noqa: F401
+from .wktplot import WKTPlot
 
 __version__ = '1.0.0'
