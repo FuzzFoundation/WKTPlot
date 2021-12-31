@@ -7,16 +7,15 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Run unit tests
           command: |
-            make init
             make develop
             make test
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
       - save_cache:
-          key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+          key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
             - "venv"
             - ".tox"
@@ -27,7 +26,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - reqs-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+            - reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - restore_cache:
           keys:
             - wheel-{{ .Branch }}-{{ .Revision }}
@@ -46,7 +45,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - reqs-{{ checksum "requirements.txt" }}-{{ checksum "ci-cd-requirements.txt" }}
+            - reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - restore_cache:
           keys:
             - wheel-{{ .Branch }}-{{ .Revision }}
