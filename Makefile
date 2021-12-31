@@ -34,18 +34,13 @@ PHONY: sparkling
 sparkling: clean
 	rm -rf $(PROJ_BASE)/venv*
 
-PHONY: test
-test:
-	rm -f .coverage
-	rm -rf tests/htmlcov
-	pytest
-	flake8 .
-
 PHONY: upload
 upload:
 	$(VENVPYTHON) -m twine upload dist/*
 
 PHONY: test
 test:
+	rm -f .coverage
+	rm -rf tests/htmlcov
 	$(VENVPYTHON) -m tox
 	$(VENVPYTHON) -m flake8 .
