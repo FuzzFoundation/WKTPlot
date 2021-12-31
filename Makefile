@@ -25,7 +25,7 @@ clean:
 	@echo "Removing build artifacts"
 	rm -rf $(PROJ_BASE)/build
 	rm -rf $(PROJ_BASE)/dist
-	rm -rf $(PROJ_BASE)/*.egg-info
+	rm -rf $(PROJ_BASE)/src/*.egg-info
 	rm -rf $(PROJ_BASE)/docs/_build/*
 	rm -f $(PROJ_BASE)/*coverage*
 	rm -rf $(PROJ_BASE)/tests/htmlcov
