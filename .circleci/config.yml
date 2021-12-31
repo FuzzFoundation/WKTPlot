@@ -11,9 +11,9 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            python -m virtualenv -p python3.9 venv
-            venv/bin/python -m pip install .[test]
-            venv/bin/python -m tox
+            python3.9 -m virtualenv -p python3.9 venv
+            venv/bin/python3.9 -m pip install .[test]
+            venv/bin/python3.9 -m tox
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
       - save_cache:
           key: reqs-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
