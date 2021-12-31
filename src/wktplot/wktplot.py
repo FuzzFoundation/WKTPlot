@@ -36,7 +36,8 @@ class WKTPlot:
         if not save_dir.is_dir():
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-        output_file(save_dir / f"{title.lower().replace(' ', '_')}.html", title=title, mode="inline")
+        file_path = save_dir / f"{title.lower().replace(' ', '_')}.html"
+        output_file(filename=file_path, title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
 
@@ -67,7 +68,7 @@ class WKTPlot:
         elif isinstance(shape, (Polygon, MultiPolygon)):
             self._plot_polys(shape, **style_kwargs)
         elif isinstance(shape, GeometryCollection):
-            for poly in shape:
+            for poly in shape.geoms:
                 self.add_shape(poly, **style_kwargs)
         else:
             raise NotImplementedError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
