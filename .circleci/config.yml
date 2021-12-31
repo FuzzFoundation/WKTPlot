@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            python3 -m pip install .
+            python3 -m pip install .[test]
             python3 -m tox
             bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
       - save_cache:
