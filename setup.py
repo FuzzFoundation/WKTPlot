@@ -17,7 +17,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         "descartes>=1.1.0",
-        "Shapely>=1.7.1"
+        "Shapely>=1.7.1",
+        "bokeh>=2.3.1"
     ],
     python_requires=">=3.7",
     classifiers=[
