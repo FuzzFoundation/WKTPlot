@@ -5,7 +5,9 @@ VENVPYTHON=$(PYTHONVENV)/bin/python
 PHONY: init
 init:
 	@echo "Creating virtual environment 'venv' for development."
+	which python || which python3
 	python3 -m venv venv || python -m venv venv
+	ls -la
 	$(VENVPYTHON) -m pip install --upgrade setuptools pip
 	@echo "\nYou may want to activate the virtual environmnent with 'source venv/bin/activate'\n"
 
