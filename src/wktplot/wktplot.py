@@ -1,4 +1,5 @@
 import logging
+import re
 import sys
 
 from bokeh.plotting import figure, output_file, save, show
@@ -37,8 +38,8 @@ class WKTPlot:
         if not save_dir.is_dir():
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-        file_path = save_dir / f"{title.lower().replace(' ', '_')}.html"
-        output_file(filename=file_path, title=title, mode="inline")
+        filename = save_dir / f"{self._create_valid_filename(filename=title)}.html"
+        output_file(filename=filename, title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
 
@@ -209,3 +210,18 @@ class WKTPlot:
 
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
+
+    def _create_valid_filename(self, filename: str) -> str:
+        """ Remove symbols from given `filename` argument.
+
+        Example:
+            >>> self._create_valid_filename(filename="wow 123 @#$%    1")
+            'wow_123_1'
+
+        Returns:
+            str: Sanitary filename.
+        """
+
+        filename = filename.lower()
+        filename = "_".join(map(str.strip, re.findall(r'\w+', filename)))
+        return filename
