@@ -16,7 +16,6 @@ develop:
 
 PHONY: build
 build:
-	flake8 .
 	$(VENVPYTHON) -m pip install build
 	$(VENVPYTHON) -m build
 
@@ -42,5 +41,4 @@ PHONY: test
 test:
 	rm -f .coverage
 	rm -rf tests/htmlcov
-	$(VENVPYTHON) -m tox
 	$(VENVPYTHON) -m flake8 .
