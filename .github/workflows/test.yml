@@ -18,9 +18,24 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Create virtual environment
+      run: make init
     - name: Install dependencies
-      run: pip install --editable .[test]
-    - name: Run tests and collect coverage
-      run: |
-        pytest
-        flake8 .
+      run: make develop
+    - name: Run tests
+      run: make test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Create virtual environment
+        run: make init
+      - name: Build module
+        run: make build
+
+
