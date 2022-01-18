@@ -57,6 +57,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: wktplot_dist
+          path: dist
       - name: Create virtual environment
         run: make init
       - name: Publish build artifacts
