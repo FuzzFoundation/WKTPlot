@@ -30,7 +30,6 @@ clean:
 	rm -rf $(PROJ_BASE)/src/*.egg-info
 	rm -rf $(PROJ_BASE)/docs/_build/*
 	rm -f $(PROJ_BASE)/*coverage*
-	rm -rf $(PROJ_BASE)/tests/htmlcov
 
 PHONY: sparkling
 sparkling: clean
@@ -42,6 +41,5 @@ upload:
 
 PHONY: test
 test:
-	rm -f .coverage
-	rm -rf tests/htmlcov
 	$(VENVPYTHON) -m flake8 .
+	$(VENVPYTHON) -m pytest
