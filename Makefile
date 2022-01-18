@@ -4,6 +4,7 @@ ifeq ($(OS),Windows_NT)
 	VENVPYTHON=$(PYTHONVENV)/Scripts/python
 else
 	VENVPYTHON=$(PYTHONVENV)/bin/python
+endif
 
 PHONY: init
 init:
