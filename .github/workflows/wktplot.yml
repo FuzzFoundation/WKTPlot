@@ -6,7 +6,9 @@ on:
 
 jobs:
   test:
+
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -24,9 +26,15 @@ jobs:
       run: make develop
     - name: Run tests
       run: make test
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+
   build:
+
     needs: test
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.9
@@ -37,6 +45,12 @@ jobs:
         run: make init
       - name: Build module
         run: make build
+
+  # publish:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+
 
 
 
