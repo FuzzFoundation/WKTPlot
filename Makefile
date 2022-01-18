@@ -1,13 +1,15 @@
 PROJ_BASE=$(shell pwd)
 PYTHONVENV=$(PROJ_BASE)/venv
-VENVPYTHON=$(PYTHONVENV)/bin/python
+ifeq ($(OS),Windows_NT)
+	VENVPYTHON=$(PYTHONVENV)/Scripts/python
+else
+	VENVPYTHON=$(PYTHONVENV)/bin/python
 
 PHONY: init
 init:
-	@echo "Creating virtual environment 'venv' for development."
+	@echo "Creating virtual environment 'venv'."
 	python3 -m venv venv || python -m venv venv
 	$(VENVPYTHON) -m pip install --upgrade setuptools pip
-	@echo "\nYou may want to activate the virtual environmnent with 'source venv/bin/activate'\n"
 
 PHONY: develop
 develop:
