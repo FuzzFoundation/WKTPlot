@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  unit-tests:
+    docker:
+      - image: gsornsen/python-ci-cd-container:latest
+    steps:
+      - run:
+          name: Run unit tests
+          command: |
+            echo "disable"
+
+workflows:
+  main:
+    jobs:
+      - unit-tests
