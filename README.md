@@ -1,12 +1,8 @@
 # WKTPlot
-
 Plot well-known-text strings and shapely geometries with Bokeh!
 
 ## Badges
-
-[![CircleCI](https://circleci.com/gh/FuzzFoundation/WKTPlot.svg?style=shield)](https://circleci.com/gh/FuzzFoundation/WKTPlot)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/19fe4574645d492e8677c4b06152dd9d)](https://www.codacy.com/gh/FuzzFoundation/WKTPlot/dashboard?utm_source=github.com;utm_content=FuzzFoundation/WKTPlot&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/19fe4574645d492e8677c4b06152dd9d)](https://www.codacy.com/gh/FuzzFoundation/WKTPlot/dashboard?utm_source=github.com&utm_medium=referral&utm_content=FuzzFoundation/WKTPlot&utm_campaign=Badge_Coverage)
+[![codecov](https://codecov.io/gh/FuzzFoundation/WKTPlot/branch/main/graph/badge.svg?token=E1BJVWQLRE)](https://codecov.io/gh/FuzzFoundation/WKTPlot)
 
 ## Installation
 ```
@@ -15,11 +11,21 @@ pip install wktplot
 
 ## Usage
 ``` python
-from wktplot.wkt_plot import WKTPlot
+from shapely.geometry import Polygon
+from wktplot import WKTPlot
 
-shape = "POLYGON((-124.4009 41.9983,-123.6237 42.0024, ...))"
-plot = WKTPlot(title="California", save_dir="/path/to/directory")
-plot.add_shape(shape, color="green", line_width=3)
+# Create plot object
+plot = WKTPlot(title="My first plot!", save_dir="/path/to/directory")
+
+# Define shapes either through well-known-text (WKT) string, or shapely object
+shape_1 = "POINT (30 10)"
+shape_2 = Polygon([[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]])
+
+# Add shapes to the plot
+plot.add_shape(shape_1, fill_color="green", line_width=3)
+plot.add_shape(shape_2, fill_color="cyan", fill_alpha=0.7)
+
+# Save the plot to disk [/path/to/directory/my_first_plot.html]
 plot.save()
 ```
 WKTPlot supports majority of shapely objects including:
@@ -43,8 +49,8 @@ import shapefile  # pyshp module
 def get_rand_color():
     return f"#{randrange(0, 0xffffff):0>6x}"
 
-plot = WKTPlot(title="California Counties", save_dir"~/scratch")
-with shapefile.Reader("~/scratch/ca_counties/CA_Counties/CA_Counties_TIGER2016.shp") as shp:
+plot = WKTPlot(title="California Counties", save_dir="~/scratch")
+with shapefile.Reader("~/scratch/CA_Counties_TIGER2016.shp") as shp:
     for shape in shp.shapes():
         p = Polygon(shape.points)
         plot.add_shape(p, fill_color=get_rand_color())
@@ -54,7 +60,7 @@ Which will result in this output:
 ![CaliforniaCounties](docs/ca_counties.png)
 
 ## Additional Info
-WKTPlot supports Bokeh's stylization parameters for customizing the look of added elemented. See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
+WKTPlot supports Bokeh's stylization parameters for customizing the look of added elements. See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
 
 ## Future Plans
 * Add native support for visualizing GeoDataframes and shapefiles.
