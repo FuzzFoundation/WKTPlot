@@ -6,14 +6,11 @@ on:
 
 jobs:
   test:
-
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: ['3.7', '3.8', '3.9']
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -31,10 +28,8 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
 
   build:
-
     needs: test
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.9
@@ -45,13 +40,23 @@ jobs:
         run: make init
       - name: Build module
         run: make build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wktplot_dist
+          path: dist/
 
-  # publish:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-
-
-
-
-
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - uses: actions/download-artifact@v2
+        with:
+          name: wktplot_dist
+      - name: Create virtual environment
+        run: make init
+      - name: Publish build artifacts
+        run: make publish
