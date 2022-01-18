@@ -18,12 +18,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Create virtual environment
-      run: make init
     - name: Install dependencies
-      run: make develop
+      run: pip install .[test]
     - name: Run tests
-      run: make test
+      run: |
+        pytest
+        flake8 .
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -33,9 +33,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Create virtual environment
-        run: make init
+      - name: Install dependencies
+        run: pip install .[test]
       - name: Build module
-        run: make build
+        run: |
+          pip install build
+          build
+
+
 
 
