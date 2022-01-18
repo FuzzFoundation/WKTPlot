@@ -33,12 +33,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Install dependencies
-        run: pip install .[test]
       - name: Build module
         run: |
           pip install build
-          build
+          python -m build
 
 
 
