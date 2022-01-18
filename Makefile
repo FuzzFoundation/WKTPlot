@@ -20,7 +20,7 @@ develop:
 PHONY: build
 build:
 	$(VENVPYTHON) -m pip install build
-	$(VENVPYTHON) -m build
+	$(VENVPYTHON) -m build --wheel
 
 PHONY: clean
 clean:
@@ -34,11 +34,6 @@ clean:
 PHONY: sparkling
 sparkling: clean
 	rm -rf $(PROJ_BASE)/venv*
-
-PHONY: publish
-publish:
-	$(VENVPYTHON) -m pip install twine
-	$(VENVPYTHON) -m twine upload dist/*
 
 PHONY: test
 test:
