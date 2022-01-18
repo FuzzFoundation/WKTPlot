@@ -29,11 +29,13 @@ clean:
 	rm -rf $(PROJ_BASE)/dist
 	rm -rf $(PROJ_BASE)/src/*.egg-info
 	rm -rf $(PROJ_BASE)/docs/_build/*
-	rm -f $(PROJ_BASE)/*coverage*
+	rm -f $(PROJ_BASE)/coverage.xml
+	rm -f $(PROJ_BASE)/.coverage
 
 PHONY: sparkling
 sparkling: clean
 	rm -rf $(PROJ_BASE)/venv*
+	rm -rf $(PROJ_BASE)/.pytest_cache
 
 PHONY: test
 test:
