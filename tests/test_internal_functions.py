@@ -1,10 +1,12 @@
+import string
+import tempfile
+import unittest
+
 from bokeh.plotting import figure
 from shapely import wkt
 from unittest.mock import Mock, patch
 from wktplot import WKTPlot
 
-import tempfile
-import unittest
 
 PLOT_TITLE = "test_1234"
 STYLE_KWARGS = {"color": "MidnightBlue", "line_width": 3.0}
@@ -225,7 +227,7 @@ class InternalFunctionTests(unittest.TestCase):
             self.assertEqual(x, expected_x)
             self.assertEqual(y, expected_y)
 
-    def test__get_poly_coordinates_verify_unexpected_shape_raises_TypeError(self):
+    def test__get_poly_coordinates__verify_unexpected_shape_raises_TypeError(self):
         """ Verify `_get_poly_coordinates` raises TypeError when given unexpected shape.
         """
 
@@ -235,6 +237,34 @@ class InternalFunctionTests(unittest.TestCase):
                 plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
                 plot._get_poly_coordinates(invalid_shape)
 
+    def test__remove_symbols__verify_return_values(self):
+        """ Verify `_remove_symbols` returns expected output.
+        """
+
+        i_o = [
+            ("hello", "hello"),
+            ("hello 123", "hello_123"),
+            ("wowzers . 456789", "wowzers_456789"),
+            ("123 yep ok", "123_yep_ok"),
+            ("okeey !@#$%^&*()[]\\|;'\"_<>?`~", "okeey")
+        ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            dummy = WKTPlot(title="test", save_dir=temp_dir)
+            for i, o in i_o:
+                self.assertEqual(dummy._remove_symbols(i), o)
+    
+    def test__get_random_string__verify_return_length_and_is_alpha_numeric(self):
+        """ Verify '_get_random_string'
+        """
+
+        valid_chars = set(string.ascii_letters + string.digits)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            dummy = WKTPlot(title="test", save_dir=temp_dir)
+            for v in [3, 7, 11]:
+                text = dummy._get_random_string(string_length=v)
+                self.assertEqual(len(text), v)
+                self.assertTrue(set(text).issubset(valid_chars))
 
 if __name__ == "__main__":
     unittest.main()
