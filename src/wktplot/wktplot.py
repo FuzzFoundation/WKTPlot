@@ -1,5 +1,7 @@
 import logging
+import random
 import re
+import string
 import sys
 
 from bokeh.plotting import figure, output_file, save, show
@@ -35,10 +37,15 @@ class WKTPlot:
 
         if isinstance(save_dir, str):
             save_dir = Path(save_dir)
+
         if not save_dir.is_dir():
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-        filename = save_dir / f"{self._remove_symbols(filename=title)}.html"
+        if not title:
+            title = self._get_random_string()
+            self.logger.info(f"Given title is empty, setting title to [{title}]")
+
+        filename = save_dir / f"{self._remove_symbols(title)}.html"
         output_file(filename=filename, title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
@@ -213,7 +220,7 @@ class WKTPlot:
 
     def _remove_symbols(self, text: str) -> str:
         """ Remove symbols from given `text` argument.
-            e.g. "wow 123 @#$%    1" --> "wow_123_1"
+            e.g. "wow 123_ @#$%    1" --> "wow_123_1"
 
         Args:
             text (str): Text to remove symbols from.
@@ -222,4 +229,17 @@ class WKTPlot:
             str: Sanitized text.
         """
 
-        return "_".join(map(str.strip, re.findall(r'\w+', text.lower())))
+        return "_".join(map(str.strip, re.findall(r'[A-Za-z0-9]+', text.lower())))
+
+    def _get_random_string(self, string_length: int = 6) -> str:
+        """ Generate string of random alpha-numeric charcters of a given length `string_length`.
+
+        Args:
+            string_length (int, default = 6): String length of returned string.
+
+        Returns:
+            str: Random string containing alpha-numeric characters.
+        """
+
+        options = string.ascii_letters + string.digits
+        return "".join(random.choices(options, k=string_length))
