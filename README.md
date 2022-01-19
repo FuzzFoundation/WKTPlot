@@ -10,9 +10,11 @@ pip install wktplot
 ```
 
 ## Description
-The [well-known-text](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) standard is very common for working with and representing geospatial data, however it is painful to visualize them programatically. The [Shapely](https://github.com/shapely/shapely) library  extends the functionality of the well-known-text standard with a rich assortment of geometry objects and operations, however it doesn't make it any easier to visualize. The WKTPlot is a library which provides a easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library which generates interactive data plots.
+The [well-known-text](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) standard is very common for working with and representing geospatial data, however it is painful to visualize them programatically. The [Shapely](https://github.com/shapely/shapely) library  extends the functionality of the well-known-text standard with a rich assortment of geometry objects and operations, but it doesn't make it any easier to visualize.
 
-## Usage
+WKTPlot is a library provides an easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library for generating interactive visualizations. Bokeh also provides a rich assortment of [stylizing options](https://docs.bokeh.org/en/latest/docs/user_guide/styling.html) which are all usable through WKTPlot's `add_shape` and `add_shapes` methods.
+
+## Basic Usage
 ``` python
 from shapely.geometry import Polygon
 from wktplot import WKTPlot
@@ -31,6 +33,8 @@ plot.add_shape(shape_2, fill_color="cyan", fill_alpha=0.7)
 # Save the plot to disk [/path/to/directory/my_first_plot.html]
 plot.save()
 ```
+
+### Supported datatypes
 WKTPlot supports majority of shapely objects including:
 * Point
 * MultiPoint
@@ -41,6 +45,7 @@ WKTPlot supports majority of shapely objects including:
 * MultiPolygon
 * GeometryCollection
 
+## Advanced Usage
 Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
 ```python
 from random import randrange
