@@ -38,7 +38,7 @@ class WKTPlot:
         if not save_dir.is_dir():
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-        filename = save_dir / f"{self._create_valid_filename(filename=title)}.html"
+        filename = save_dir / f"{self._remove_symbols(filename=title)}.html"
         output_file(filename=filename, title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
@@ -211,17 +211,15 @@ class WKTPlot:
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
 
-    def _create_valid_filename(self, filename: str) -> str:
-        """ Remove symbols from given `filename` argument.
+    def _remove_symbols(self, text: str) -> str:
+        """ Remove symbols from given `text` argument.
+            e.g. "wow 123 @#$%    1" --> "wow_123_1"
 
-        Example:
-            >>> self._create_valid_filename(filename="wow 123 @#$%    1")
-            'wow_123_1'
+        Args:
+            text (str): Text to remove symbols from.
 
         Returns:
-            str: Sanitary filename.
+            str: Sanitized text.
         """
 
-        filename = filename.lower()
-        filename = "_".join(map(str.strip, re.findall(r'\w+', filename)))
-        return filename
+        return "_".join(map(str.strip, re.findall(r'\w+', text.lower())))
