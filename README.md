@@ -67,9 +67,6 @@ plot.save()
 Which will result in this output:
 ![CaliforniaCounties](docs/ca_counties.png)
 
-## Additional Info
-WKTPlot supports Bokeh's stylization parameters for customizing the look of added elements. See this guide for more info: https://docs.bokeh.org/en/latest/docs/user_guide/styling.html
-
 ## Future Plans
 * Add native support for visualizing GeoDataframes and shapefiles.
 * Make web view more interactive.
