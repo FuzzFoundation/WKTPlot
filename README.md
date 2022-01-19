@@ -1,5 +1,5 @@
 # WKTPlot
-Plot well-known-text strings and shapely geometries with Bokeh!
+Wrapper around the [Bokeh](https://github.com/bokeh/bokeh) library for plotting well-known-text strings and shapely geometries!
 
 ## Badges
 [![codecov](https://codecov.io/gh/FuzzFoundation/WKTPlot/branch/main/graph/badge.svg?token=E1BJVWQLRE)](https://codecov.io/gh/FuzzFoundation/WKTPlot)
@@ -8,6 +8,9 @@ Plot well-known-text strings and shapely geometries with Bokeh!
 ```
 pip install wktplot
 ```
+
+## Description
+The [well-known-text](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) standard is very common for working with and representing geospatial data, however it is painful to visualize them programatically. The [Shapely](https://github.com/shapely/shapely) library  extends the functionality of the well-known-text standard with a rich assortment of geometry objects and operations, however it doesn't make it any easier to visualize. The WKTPlot is a library which provides a easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library which generates interactive data plots.
 
 ## Usage
 ``` python
