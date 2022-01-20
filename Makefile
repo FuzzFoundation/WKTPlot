@@ -10,9 +10,9 @@ PHONY: init
 init:
 	@echo "Creating virtual environment 'venv'."
 	python3 -m venv venv || python -m venv venv
-	$(VENVPYTHON) -m pip install --upgrade setuptools pip
+	$(VENVPYTHON) -m pip install --upgrade setuptools pip pip-tools
 
-PHONY: develop
+PHONY: init develop
 develop:
 	@echo "Installing wktplot, with editible modules ('python -m pip install --editable .[test]')"
 	$(VENVPYTHON) -m pip install --editable .[test]
