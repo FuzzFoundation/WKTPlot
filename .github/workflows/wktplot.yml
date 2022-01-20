@@ -24,6 +24,9 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+    - name: Codacy Analysis CLI
+      uses: codacy/codacy-analysis-cli-action@4.0.0
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
 
   build:
     needs: test
