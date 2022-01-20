@@ -69,6 +69,10 @@ plot.save()
 Which will result in this output:
 ![CaliforniaCounties](docs/ca_counties.png)
 
+## Dependency Limitations
+* Shapely version 1.8 is not yet compatible with Python 3.9 on MacOS Big Sur: [issue](https://github.com/shapely/shapely/issues/1040)
+* Shapely version 1.8 is not yet compatible with Python 3.9 on Windows: [issue](https://github.com/shapely/shapely/issues/1215)
+
 ## Future Plans
 * Add native support for visualizing GeoDataframes and shapefiles.
 * Make web view more interactive.
