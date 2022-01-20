@@ -2,7 +2,9 @@
 Wrapper around the [Bokeh](https://github.com/bokeh/bokeh) library for plotting well-known-text strings and shapely geometries!
 
 ## Badges
+[![PyPi Python Versions](https://img.shields.io/pypi/pyversions/wktplot.svg)](https://pypi.org/project/wktplot/)
 [![codecov](https://codecov.io/gh/FuzzFoundation/WKTPlot/branch/main/graph/badge.svg?token=E1BJVWQLRE)](https://codecov.io/gh/FuzzFoundation/WKTPlot)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/19fe4574645d492e8677c4b06152dd9d)](https://www.codacy.com/gh/FuzzFoundation/WKTPlot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FuzzFoundation/WKTPlot&amp;utm_campaign=Badge_Grade)
 
 ## Installation
 ```
