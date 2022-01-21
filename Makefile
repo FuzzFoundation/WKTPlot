@@ -12,8 +12,8 @@ init:
 	python3 -m venv venv || python -m venv venv
 	$(VENVPYTHON) -m pip install --upgrade setuptools pip pip-tools
 
-PHONY: init develop
-develop:
+PHONY: develop
+develop: init
 	@echo "Installing wktplot, with editible modules ('python -m pip install --editable .[test]')"
 	$(VENVPYTHON) -m pip install --editable .[test]
 
