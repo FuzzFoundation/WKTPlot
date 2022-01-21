@@ -50,11 +50,11 @@ WKTPlot supports majority of shapely objects including:
 ## Advanced Usage
 Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
 ```python
+import shapefile  # pyshp module
+
 from random import randrange
 from shapely.geometry import Polygon
-from wktplot.wkt_plot import WKTPlot
-
-import shapefile  # pyshp module
+from wktplot import WKTPlot
 
 def get_rand_color():
     return f"#{randrange(0, 0xffffff):0>6x}"
