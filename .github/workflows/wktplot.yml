@@ -23,10 +23,10 @@ jobs:
       run: make test
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && github.ref == 'ref/heads/main'
     - name: Codacy Analysis CLI
       uses: codacy/codacy-analysis-cli-action@4.0.0
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && github.ref == 'ref/heads/main'
 
   build:
     if: github.event_name == 'pull_request'
