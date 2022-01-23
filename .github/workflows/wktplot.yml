@@ -48,7 +48,7 @@ jobs:
           path: dist/
 
   publish:
-    if: if github.ref == 'ref/heads/main'
+    if: github.ref == 'ref/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
