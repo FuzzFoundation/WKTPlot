@@ -2,14 +2,11 @@ name: WKTPlot
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ $default-branch ]
   push:
-    branches:
-      - main
+    branches: [ $default-branch ]
   release:
-    branches:
-      - main
+    branches: [ $default-branch ]
 
 jobs:
   test:
