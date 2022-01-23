@@ -1,16 +1,11 @@
 name: WKTPlot
 
 on:
-  pull_request:
-    branches: [ $default-branch ]
-  push:
-    branches: [ $default-branch ]
-  release:
-    branches: [ $default-branch ]
+  - push
+  - pull request
 
 jobs:
   test:
-    if: github.event_name == 'pull_request'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -34,7 +29,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
 
   build:
-    if: github.event_name == 'push'
+    if: github.event_name == 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +48,7 @@ jobs:
           path: dist/
 
   publish:
-    if: github.event_name == 'pull_request'
+    if: if github.ref == 'ref/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
