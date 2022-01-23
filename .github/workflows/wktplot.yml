@@ -1,16 +1,11 @@
 name: WKTPlot
 
 on:
-  pull_request:
-    branches: [ $default-branch ]
-  push:
-    branches: [ $default-branch ]
-  release:
-    branches: [ $default-branch ]
+  - push
+  - pull_request
 
 jobs:
   test:
-    if: github.event_name == 'pull_request'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -28,13 +23,13 @@ jobs:
       run: make test
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && github.ref == 'ref/heads/main'
     - name: Codacy Analysis CLI
       uses: codacy/codacy-analysis-cli-action@4.0.0
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && github.ref == 'ref/heads/main'
 
   build:
-    if: github.event_name == 'push'
+    if: github.event_name == 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +48,7 @@ jobs:
           path: dist/
 
   publish:
-    if: github.event_name == 'pull_request'
+    if: github.ref == 'ref/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
