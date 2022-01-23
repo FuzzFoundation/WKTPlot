@@ -1,5 +1,6 @@
+# flake8: noqa
 from pathlib import Path
-from wktplot.wkt_plot import WKTPlot
+from wktplot import WKTPlot
 
 
 shapes = {
