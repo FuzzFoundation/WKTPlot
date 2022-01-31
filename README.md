@@ -67,7 +67,7 @@ with shapefile.Reader("~/scratch/CA_Counties_TIGER2016.shp") as shp:
 plot.save()
 ```
 Which will result in this output:
-![CaliforniaCounties](docs/ca_counties.png)
+![CaliforniaCounties](https://i.imgur.com/YPQQlml.png)
 
 ## Dependency Limitations
 * Shapely version 1.8 is not yet compatible with Python 3.9 on M1 MacOS Big Sur: [issue](https://github.com/shapely/shapely/issues/1040)
