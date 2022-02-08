@@ -1,4 +1,5 @@
 from bokeh.plotting import figure, output_file
+from itertools import product
 from pathlib import Path
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, Polygon, Point
@@ -135,6 +136,29 @@ class FacingFunctionsTests(unittest.TestCase):
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
             plot.show()
             mock_show.assert_called_once_with(plot.figure)
+    
+    @patch("wktplot.wktplot.show")
+    @patch("wktplot.wktplot.save")
+    def test_context_manager__verify_on_exit_calls(self, mock_save: Mock, mock_show: Mock):
+        """ TODO: docstring
+        """
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            for save_bool, show_bool in product([False, True], repeat=2):
+                mock_save.reset_mock()
+                mock_show.reset_mock()
+                with WKTPlot(title=PLOT_TITLE, save_dir=temp_dir, save_on_exit=save_bool, show_on_exit=show_bool) as p:
+                    pass
+
+                if save_bool:
+                    mock_save.assert_called_once()
+                else:
+                    mock_save.assert_not_called()
+                
+                if show_bool:
+                    mock_show.assert_called_once()
+                else:
+                    mock_show.assert_not_called()
 
 
 if __name__ == "__main__":
