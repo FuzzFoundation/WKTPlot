@@ -10,7 +10,7 @@ from shapely import wkt
 from shapely.geometry import (
     GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon)
 from shapely.geometry.base import BaseGeometry
-from typing import Union
+from typing import Any, Union
 
 
 logging.basicConfig(
@@ -23,13 +23,32 @@ logging.basicConfig(
 class WKTPlot:
     logger = logging.getLogger(__name__)
 
-    def __init__(self, title: str, save_dir: Union[str, Path]):
-        """ Constructor for WKTPlot class.
+    def __init__(
+            self,
+            save_dir: Union[str, Path],
+            title: str = None,
+            x_axis_label: str = "Longitude",
+            y_axis_label: str = "Latitude",
+            width: Union[int, float] = 600,
+            height: Union[int, float] = 600,
+            save_on_exit: bool = True,
+            show_on_exit: bool = False,
+            **style_kwargs: dict[str, Any]):
+        """ Create bokeh figure with given style arguments.
 
         Args:
-            title (str): Title for graph and output filename.
-                e.g. title = "Test 123 ABC" -> filename = "test_123_abc.html"
-            save_dir (str | obj: Path): Path to save output file to.
+            save_dir (str | obj: Path): Destination directory for plot file.
+            title (str, default = None): Plot title. A sanitized version is used at the filename.
+                e.g. title = "Test 123 ABC", filename = "test_123_abc.html"
+            x_axis_label (str, default = "Longitude"): Label for plot x axis, defaults to "Longitude".
+            y_axis_label (str, default = "Latitude"): Label for plot y axis, defaults to "Latitude".
+            width (int | float, default = 600) Width of plot in pixels.
+            height (int | float, default = 600) Height of plot in pixels.
+            save_on_exit (bool, default = True): Boolean for saving the plot when context manager exits.
+            show_on_exit (bool, default = False): Boolean for showing the plot when context manager exits.
+            **style_kwargs (dict[str, Any]): Dictionary of attributes to configure & style bokeh figure.
+                See this guide for available attributes:
+                https://docs.bokeh.org/en/latest/docs/reference/plotting/figure.html
 
         Raises:
             OSError: If value for `save_dir` is not a directory.
@@ -43,12 +62,43 @@ class WKTPlot:
 
         if not title:
             title = self._get_random_string()
-            self.logger.info(f"Given title is empty, setting title to [{title}]")
+            self.logger.warning(f"Given title is empty, setting title to [{title}]")
 
-        filename = save_dir / f"{self._remove_symbols(title)}.html"
+        filename: Path = save_dir / f"{self._remove_symbols(title)}.html"
         output_file(filename=filename, title=title, mode="inline")
-        self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
+
+        self.figure = figure(
+            title=title,
+            x_axis_label=x_axis_label,
+            y_axis_label=y_axis_label,
+            width=width,
+            height=height,
+            **style_kwargs,
+        )
+
         self.figure.toolbar.autohide = True
+        self._save_on_exit = save_on_exit
+        self._show_on_exit = show_on_exit
+
+    def __enter__(self) -> "WKTPlot":
+        """ Context-manager entry point.
+
+        Returns:
+            Instance of WKTPlot class
+        """
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        """ Context-manager exit point. Save and / or show current figure if `_save_on_exit`, `_show_on_exit` instance
+            variables are set.
+        """
+
+        if self._save_on_exit:
+            self.save()
+
+        if self._show_on_exit:
+            self.show()
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict):
         """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are:
