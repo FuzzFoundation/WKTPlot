@@ -24,8 +24,8 @@ class WKTPlot:
 
     def __init__(
             self,
-            save_dir: Union[str, Path],
             title: str = None,
+            save_dir: Union[str, Path] = None,
             x_axis_label: str = "Longitude",
             y_axis_label: str = "Latitude",
             save_on_exit: bool = True,
