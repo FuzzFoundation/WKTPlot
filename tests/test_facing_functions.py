@@ -1,6 +1,5 @@
 from bokeh.plotting import figure, output_file
 from itertools import product
-from pathlib import Path
 from shapely import wkt
 from shapely.geometry import GeometryCollection, LineString, Polygon, Point
 from shapely.geometry.base import BaseGeometry
