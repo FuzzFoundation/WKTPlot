@@ -48,6 +48,15 @@ WKTPlot supports majority of shapely objects including:
 * GeometryCollection
 
 ## Advanced Usage
+### Context manager
+You can use `WKTPlot` as a context manager. By default it will save the plot on exit, but you can turn it off / configure it to show on exit with the arguments `save_on_exit`, and `show_on_exit`:
+``` python
+from wktplot import WKTPlot
+
+with WKTPlot(title="test", save_dir="~/scratch", show_on_exit=True, save_on_exit=False) as plot:
+    plot.add_shape("POINT (30 10)", **{"line_width": 10})
+```
+### Shapefile
 Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
 ```python
 import shapefile  # pyshp module
