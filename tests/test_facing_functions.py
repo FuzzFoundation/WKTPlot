@@ -26,6 +26,8 @@ class FakeShape(BaseGeometry):
 
 class FacingFunctionsTests(unittest.TestCase):
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test_constructor__verify_invalid_save_dir_raises_OSError(self):
         """ Verify `WKTPlot.__init__` raises OSError when given an invalid `save_dir` value.
         """
@@ -59,7 +61,8 @@ class FacingFunctionsTests(unittest.TestCase):
         
         mock_utils.get_random_string.assert_called_once()
         
-
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test_add_shape__verify_nonrecursive_methods_called(self):
         """ Verify `add_shape` calls expected internal methods when given certain non-recursive shapes.
         """
@@ -89,6 +92,8 @@ class FacingFunctionsTests(unittest.TestCase):
                         plot.add_shape(shape_wkt, **STYLE_KWARGS)
                         mock_plot_method.assert_called_once_with(shape, **STYLE_KWARGS)
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test_add_shape__verify_recursive_calls_when_given_geometrycollection(self):
         """ Verify `add_shape` calls expected internal methods when given recursive shape.
         """
@@ -106,6 +111,8 @@ class FacingFunctionsTests(unittest.TestCase):
                 mock_methods["_plot_lines"].assert_called_once_with(line_string, **STYLE_KWARGS)
                 mock_methods["_plot_polys"].assert_called_once_with(polygon, **STYLE_KWARGS)
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test_add_shape_verify_unexpected_shape_raises_NotImplementedError(self):
         """ Verify `add_shape` raises `NotImplementedError` when given an unknown object.
         """
@@ -116,6 +123,8 @@ class FacingFunctionsTests(unittest.TestCase):
             with self.assertRaises(NotImplementedError):
                 plot.add_shape(fake_shape, **STYLE_KWARGS)
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     def test_add_shape__verify_empty_shape_returns(self):
         """ Verify `add_shape` returns early when given an empty shape.
         """
@@ -129,6 +138,8 @@ class FacingFunctionsTests(unittest.TestCase):
                 mock_methods["_plot_lines"].assert_not_called()
                 mock_methods["_plot_polys"].assert_not_called()
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     @patch("wktplot.wktplot.save")
     def test_save__verify_methods_called(self, mock_save: Mock):
         """ Verify `save` method calls method with expected arguments.
@@ -139,6 +150,8 @@ class FacingFunctionsTests(unittest.TestCase):
             plot.save()
             mock_save.assert_called_once_with(plot.figure)
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     @patch("wktplot.wktplot.show")
     def test_show__verify_methods_called(self, mock_show: Mock):
         """ Verify `show` method calls method with expected arguments.
@@ -149,10 +162,12 @@ class FacingFunctionsTests(unittest.TestCase):
             plot.show()
             mock_show.assert_called_once_with(plot.figure)
     
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
     @patch("wktplot.wktplot.show")
     @patch("wktplot.wktplot.save")
     def test_context_manager__verify_on_exit_calls(self, mock_save: Mock, mock_show: Mock):
-        """ TODO: docstring
+        """ Verify `__exit__` calls save and / or show methods.
         """
 
         with tempfile.TemporaryDirectory() as temp_dir:
