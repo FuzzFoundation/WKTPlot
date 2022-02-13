@@ -1,4 +1,3 @@
-import string
 import tempfile
 import unittest
 
