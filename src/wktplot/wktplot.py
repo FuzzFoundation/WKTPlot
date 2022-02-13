@@ -1,7 +1,4 @@
 import logging
-import random
-import re
-import string
 import sys
 
 from bokeh.plotting import figure, output_file, save, show
@@ -12,6 +9,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 from typing import Any, Optional, Type, Union
 from types import TracebackType
+from wktplot.utils import Utils
 
 
 logging.basicConfig(
@@ -58,10 +56,11 @@ class WKTPlot:
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
         if not title:
-            title = self._get_random_string()
+            title = Utils.get_random_string()
             self.logger.warning(f"Given title is empty, setting title to [{title}]")
 
-        filename: Path = save_dir / f"{self._remove_symbols(title)}.html"
+        title = Utils.remove_symbols(title)
+        filename: Path = save_dir / f"{title}.html"
         output_file(filename=filename, title=title, mode="inline")
 
         self.figure = figure(
@@ -266,29 +265,3 @@ class WKTPlot:
 
         else:
             raise TypeError(f"Given `shape` argument is of an unexpected type [{type(shape).__name__}]")
-
-    def _remove_symbols(self, text: str) -> str:
-        """ Remove symbols from given `text` argument.
-            e.g. "wow 123_ @#$%    1" --> "wow_123_1"
-
-        Args:
-            text (str): Text to remove symbols from.
-
-        Returns:
-            str: Sanitized text.
-        """
-
-        return "_".join(map(str.strip, re.findall(r'[A-Za-z0-9]+', text.lower())))
-
-    def _get_random_string(self, string_length: int = 6) -> str:
-        """ Generate string of random alpha-numeric charcters of a given length `string_length`.
-
-        Args:
-            string_length (int, default = 6): String length of returned string.
-
-        Returns:
-            str: Random string containing alpha-numeric characters.
-        """
-
-        options = string.ascii_letters + string.digits
-        return "".join(random.choices(options, k=string_length))
