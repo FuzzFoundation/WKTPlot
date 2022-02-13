@@ -41,10 +41,9 @@ class FacingFunctionsTests(unittest.TestCase):
         """
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            expected_file_path = Path(temp_dir) / PLOT_FILE
             plot = WKTPlot(title=PLOT_TITLE, save_dir=temp_dir)
-            mock_output.assert_called_once_with(filename=expected_file_path, title=PLOT_TITLE, mode="inline")
-            mock_figure.assert_called_once_with(title=PLOT_TITLE, x_axis_label="Longitude", y_axis_label="Latitude")
+            mock_output.assert_called_once()
+            mock_figure.assert_called_once()
             self.assertEqual(plot.figure, mock_figure.return_value)
             self.assertTrue(plot.figure.toolbar.autohide)
 
@@ -118,7 +117,7 @@ class FacingFunctionsTests(unittest.TestCase):
                 mock_methods["_plot_polys"].assert_not_called()
 
     @patch("wktplot.wktplot.save")
-    def test_save__verify_methods_called(self, mock_save):
+    def test_save__verify_methods_called(self, mock_save: Mock):
         """ Verify `save` method calls method with expected arguments.
         """
 
@@ -128,7 +127,7 @@ class FacingFunctionsTests(unittest.TestCase):
             mock_save.assert_called_once_with(plot.figure)
 
     @patch("wktplot.wktplot.show")
-    def test_show__verify_methods_called(self, mock_show):
+    def test_show__verify_methods_called(self, mock_show: Mock):
         """ Verify `show` method calls method with expected arguments.
         """
 
@@ -147,7 +146,8 @@ class FacingFunctionsTests(unittest.TestCase):
             for save_bool, show_bool in product([False, True], repeat=2):
                 mock_save.reset_mock()
                 mock_show.reset_mock()
-                with WKTPlot(title=PLOT_TITLE, save_dir=temp_dir, save_on_exit=save_bool, show_on_exit=show_bool) as p:
+
+                with WKTPlot(title=PLOT_TITLE, save_dir=temp_dir, save_on_exit=save_bool, show_on_exit=show_bool):
                     pass
 
                 if save_bool:
