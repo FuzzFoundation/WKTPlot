@@ -47,6 +47,19 @@ class FacingFunctionsTests(unittest.TestCase):
             self.assertEqual(plot.figure, mock_figure.return_value)
             self.assertTrue(plot.figure.toolbar.autohide)
 
+    @patch("wktplot.wktplot.output_file", Mock(spec_set=output_file))
+    @patch("wktplot.wktplot.figure", Mock(spec_set=figure))
+    @patch("wktplot.wktplot.Utils")
+    def test_constructor__verify_empty_title_gets_random_value(self, mock_utils: Mock):
+        """ Verify random string is generated if no title is given to constructor.
+        """
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            WKTPlot(save_dir=temp_dir)
+        
+        mock_utils.get_random_string.assert_called_once()
+        
+
     def test_add_shape__verify_nonrecursive_methods_called(self):
         """ Verify `add_shape` calls expected internal methods when given certain non-recursive shapes.
         """
