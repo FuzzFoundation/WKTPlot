@@ -10,6 +10,7 @@ Check the type of change this PR addresses:
 
 - [ ] Bug
 - [ ] Feature
+- [ ] Documentation
 
 ## Backwards Compatibility
 
