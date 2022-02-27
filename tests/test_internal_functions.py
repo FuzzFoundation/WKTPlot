@@ -253,7 +253,7 @@ class InternalFunctionTests(unittest.TestCase):
             dummy = WKTPlot(title="test", save_dir=temp_dir)
             for i, o in i_o:
                 self.assertEqual(dummy._remove_symbols(i), o)
-    
+
     def test__get_random_string__verify_return_length_and_is_alpha_numeric(self):
         """ Verify '_get_random_string'
         """

@@ -7,7 +7,8 @@ Wrapper around the [Bokeh](https://github.com/bokeh/bokeh) library for plotting 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/19fe4574645d492e8677c4b06152dd9d)](https://www.codacy.com/gh/FuzzFoundation/WKTPlot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FuzzFoundation/WKTPlot&amp;utm_campaign=Badge_Grade)
 
 ## Installation
-```
+
+```bash
 pip install wktplot
 ```
 
