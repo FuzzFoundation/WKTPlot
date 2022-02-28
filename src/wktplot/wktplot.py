@@ -1,16 +1,23 @@
 import logging
-import random
-import re
-import string
 import sys
 
-from bokeh.plotting import figure, output_file, save, show
+from abc import ABC, abstractmethod
+from bokeh.plotting import Figure, figure, output_file, save, show
 from pathlib import Path
 from shapely import wkt
 from shapely.geometry import (
-    GeometryCollection, LineString, LinearRing, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon)
+    GeometryCollection,
+    LineString,
+    LinearRing,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 from shapely.geometry.base import BaseGeometry
-from typing import Union
+from typing import Any, Dict, Union
+from wktplot.file_utils import get_random_string, sanitize_text
 
 
 logging.basicConfig(
@@ -20,10 +27,15 @@ logging.basicConfig(
 )
 
 
-class WKTPlot:
+class WKTPlot(ABC):
     logger = logging.getLogger(__name__)
 
-    def __init__(self, title: str, save_dir: Union[str, Path]):
+    def __init__(
+        self,
+        title: str = None,
+        save_dir: Union[str, Path] = None,
+        **figure_style_kwargs: Dict[str, Any],
+    ) -> None:
         """ Constructor for WKTPlot class.
 
         Args:
@@ -38,17 +50,35 @@ class WKTPlot:
         if isinstance(save_dir, str):
             save_dir = Path(save_dir)
 
-        if not save_dir.is_dir():
+        if not (isinstance(save_dir, Path) and save_dir.is_dir()):
             raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
         if not title:
-            title = self._get_random_string()
+            title: str = get_random_string()
             self.logger.info(f"Given title is empty, setting title to [{title}]")
+        
+        title: str = sanitize_text(title)
+        filename: Path = save_dir / f"{title}.html"
 
-        filename = save_dir / f"{self._remove_symbols(title)}.html"
         output_file(filename=filename, title=title, mode="inline")
-        self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
-        self.figure.toolbar.autohide = True
+        self.figure: Figure = self.create_figure(title=title, **figure_style_kwargs)
+    
+    @abstractmethod
+    def create_figure(self, title: str, **figure_style_kwargs: Dict[str, Any]) -> Figure:
+        """ TODO: docstring
+        """
+
+        default_kargs: Dict[str, Any] = {
+            "x_axis_label": "Longitude",
+            "y_axis_label": "Latitude",
+        }
+
+        default_kargs.update(figure_style_kwargs)
+
+        fig = figure(title=title, **default_kargs)
+        fig.toolbar.autohide = True
+
+        return fig
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict):
         """ Plot a given well-known-text string or shapely object. Shapely geometries currently supported are:
