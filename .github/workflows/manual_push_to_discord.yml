@@ -1,0 +1,15 @@
+name: unittest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  discord_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord Notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} is sending a notifcation...'
