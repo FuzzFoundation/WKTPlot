@@ -1,4 +1,4 @@
-name: unittest
+name: Manual Push to Discord
 
 on:
   workflow_dispatch:
