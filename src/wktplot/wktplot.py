@@ -23,13 +23,14 @@ logging.basicConfig(
 class WKTPlot:
     logger = logging.getLogger(__name__)
 
-    def __init__(self, title: str, save_dir: Union[str, Path]):
+    def __init__(self, title: str, save_dir: Union[str, Path], save_fig: bool =True):
         """ Constructor for WKTPlot class.
 
         Args:
             title (str): Title for graph and output filename.
                 e.g. title = "Test 123 ABC" -> filename = "test_123_abc.html"
             save_dir (str | obj: Path): Path to save output file to.
+            save_fig (bool): Configure Bokeh to configure the default output state to generate output saved to a file when show() is called. `Default: True`
 
         Raises:
             OSError: If value for `save_dir` is not a directory.
@@ -46,7 +47,8 @@ class WKTPlot:
             self.logger.info(f"Given title is empty, setting title to [{title}]")
 
         filename = save_dir / f"{self._remove_symbols(title)}.html"
-        output_file(filename=filename, title=title, mode="inline")
+        if save_fig:
+            output_file(filename=filename, title=title, mode="inline")
         self.figure = figure(title=title, x_axis_label="Longitude", y_axis_label="Latitude")
         self.figure.toolbar.autohide = True
 
