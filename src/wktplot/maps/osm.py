@@ -1,30 +1,82 @@
-from bokeh.plotting import Figure
-from bokeh.tile_providers import get_provider, Vendors
-from typing import Any, Dict
-from wktplot import WKTPlot
+import numpy as np
 
-SCALE: int = 10 ** 5
+from .standard import StandardMap
+from shapely.geometry import Point, LineString, LinearRing, Polygon
+from typing import List, Tuple, Union
 
 
-class OpenStreetMapPlot(WKTPlot):
+EARTH_RADIUS: float = 6378137.0
+COORDINATES = Union[float, np.float64, np.ndarray]
 
-    def create_figure(self, title: str, **figure_style_kwargs: Dict[str, Any]) -> Figure:
-        """ TODO: docstring
-        """
+def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[COORDINATES, COORDINATES]:
+    """ Convert given lat / long coordinates to mercator coordinates.
+        - https://en.wikipedia.org/wiki/Mercator_projection#Derivation
+        - https://en.wikipedia.org/wiki/Transverse_Mercator_projection#Formulae_for_the_spherical_transverse_Mercator
 
-        # Set axis type to load the map
-        # - https://docs.bokeh.org/en/latest/docs/user_guide/geo.html#tile-provider-maps
-        default_kwargs: Dict[str, Any] = {
-            "x_axis_type": "mercator",
-            "y_axis_type": "mercator",
-        }
+    Args:
+        lat_deg (float | obj: np.ndarray): Latitude coordinates in degrees.
+        lng_deg (float | obj: np.ndarray): Longitude coordinates in degrees.
 
-        default_kwargs.update(figure_style_kwargs)
+    Return:
+        tuple[float | obj: np.ndarray, float | obj: np.ndarray]: Tuple containing longitude and latitude mercator
+            coordinates.
+    """
 
-        tile_provider = get_provider(Vendors.OSM)
-        fig: Figure = super().create_figure(title, **default_kwargs)
-        fig.add_tile(tile_provider)
+    φ = np.radians(lat_deg)
+    λ = np.radians(lng_deg)
 
-        return fig
+    merc_lat = EARTH_RADIUS * np.log(np.tan((np.pi / 4.0) + (φ / 2.0)))
+    merc_lng = EARTH_RADIUS * λ
+
+    return merc_lng, merc_lat
+
+class OpenStreetMap(StandardMap):
     
+    @classmethod
+    def get_point_coords(cls, shape: Point) -> Tuple[float, float]:
 
+        geo_x, geo_y = super().get_point_coords(shape)
+        merc_x, merc_y = map(
+            float,
+            geographic_to_mercator(
+                lat_deg=geo_x,
+                lng_deg=geo_y,
+            )
+        )
+
+        return merc_x, merc_y
+
+    @classmethod
+    def get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[float], List[float]]:
+
+        geo_x_list, geo_y_list = super().get_line_string_coords(shape)
+
+        merc_x, merc_y = map(
+            list,
+            geographic_to_mercator(
+                lat_deg=np.array(geo_x_list, dtype=float),
+                lng_deg=np.array(geo_y_list, dtype=float),
+            )
+        )
+        return merc_x, merc_y
+    
+    @classmethod
+    def get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
+
+        merc_x_nested_list: List[List[float]] = []
+        merc_y_nested_list: List[List[float]] = []
+
+        geo_x_nested_list, geo_y_nested_list = super().get_polygon_coords(shape)
+
+        for geo_x_list, geo_y_list in zip(geo_x_nested_list, geo_y_nested_list):
+            merc_x_arr, merc_y_arr = map(
+                list,
+                geographic_to_mercator(
+                    lat_deg=np.array(geo_x_list, dtype=float),
+                    lng_deg=np.array(geo_y_list, dtype=float),
+                )
+            )
+            merc_x_nested_list.append(merc_x_arr)
+            merc_y_nested_list.append(merc_y_arr)
+
+        return merc_x_nested_list, merc_y_nested_list
