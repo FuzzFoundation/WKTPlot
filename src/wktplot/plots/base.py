@@ -5,12 +5,12 @@ from typing import Union
 
 
 class BasePlot(ABC):
-    
+
     @abstractclassmethod
     def _create_figure(cls) -> Figure:
         """ TODO: docstring
         """
-    
+
     @abstractmethod
     def save(self) -> None:
         """ Wrapper method around `bokeh.plotting.save`.
@@ -18,7 +18,7 @@ class BasePlot(ABC):
         See source for more info:
         https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.save
         """
-    
+
     @abstractmethod
     def show(self) -> None:
         """ Wrapper method around `bokeh.plotting.show`.
@@ -26,7 +26,7 @@ class BasePlot(ABC):
         See source for more info:
         https://docs.bokeh.org/en/latest/docs/reference/io.html#bokeh.io.show
         """
-    
+
     @abstractmethod
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
         """ Plot a given well-known-text string or shapely object.

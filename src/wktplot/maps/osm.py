@@ -1,12 +1,13 @@
 import numpy as np
 
-from .standard import StandardMap
 from shapely.geometry import Point, LineString, LinearRing, Polygon
 from typing import List, Tuple, Union
+from wktplot.maps.standard import StandardMap
 
 
 EARTH_RADIUS: float = 6378137.0
 COORDINATES = Union[float, np.float64, np.ndarray]
+
 
 def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[COORDINATES, COORDINATES]:
     """ Convert given lat / long coordinates to mercator coordinates.
@@ -30,8 +31,9 @@ def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[
 
     return merc_lng, merc_lat
 
+
 class OpenStreetMap(StandardMap):
-    
+
     @classmethod
     def get_point_coords(cls, shape: Point) -> Tuple[float, float]:
 
@@ -59,7 +61,7 @@ class OpenStreetMap(StandardMap):
             )
         )
         return merc_x, merc_y
-    
+
     @classmethod
     def get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
 

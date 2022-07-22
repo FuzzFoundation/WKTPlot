@@ -43,12 +43,11 @@ class WKTPlot(BasePlot):
 
             if not (isinstance(save_dir, Path) and save_dir.is_dir()):
                 raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir=}]")
-            
+
             filename: Path = save_dir / f"{title}.html"
             plt.output_file(filename=filename, title=title, mode="inline")
-            
-        self.figure: plt.Figure = self._create_figure(title=title, **figure_style_kwargs)
 
+        self.figure: plt.Figure = self._create_figure(title=title, **figure_style_kwargs)
 
     @classmethod
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
@@ -64,16 +63,14 @@ class WKTPlot(BasePlot):
 
         return fig
 
-
     def save(self) -> None:
 
         plt.save(self.figure)
 
-
     def show(self) -> None:
 
         plt.show(self.figure)
-    
+
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
 
         self.mapper.add_shape(self.figure, shape, **style_kwargs)
