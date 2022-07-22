@@ -1,6 +1,10 @@
 from .base import BaseMap
+from bokeh.plotting import Figure
 from shapely.geometry import Point, LineString, LinearRing, Polygon
+from shapely.geometry.base import BaseGeometry, BaseMultipartGeometry
+from shapely import wkt
 from typing import List, Tuple, Union
+from wktplot.common.types import SUPPORTED_GEOMS
 
 
 class StandardMap(BaseMap):
@@ -33,3 +37,33 @@ class StandardMap(BaseMap):
             y.append(intr_y[:-1])
         
         return x, y
+    
+    @classmethod
+    def add_shape(cls, figure: Figure, shape: Union[str, BaseGeometry], **style_kwargs) -> None:
+
+        if isinstance(shape, str):
+            shape = wkt.loads(shape)
+
+        if not isinstance(shape, SUPPORTED_GEOMS):
+            raise TypeError(
+                f"Given argument `shape` is of an unsupported type [{type(shape).__name__}]"
+            )
+
+        if shape.is_empty:
+            return
+
+        if isinstance(shape, BaseMultipartGeometry):
+            for poly in shape.geoms:
+                cls.add_shape(figure, poly, **style_kwargs)
+        
+        elif isinstance(shape, Point):
+            x, y = cls.get_point_coords(shape)
+            figure.circle(x, y, **style_kwargs)
+        
+        elif isinstance(shape, (LineString, LinearRing)):
+            x, y = cls.get_line_string_coords(shape)
+            figure.line(x, y, **style_kwargs)
+        
+        elif isinstance(shape, Polygon):
+            x, y = cls.get_polygon_coords(shape)
+            figure.multi_polygons([[x]], [[y]], **style_kwargs)

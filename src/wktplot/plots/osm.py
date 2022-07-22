@@ -1,13 +1,18 @@
-from .base import BaseFigure
-from bokeh.plotting import Figure, figure
+from bokeh import plotting as plt
 from bokeh.tile_providers import Vendors, get_provider
 from typing import Any, Dict
+from wktplot.plots.standard import WKTPlot
+from wktplot.maps import OpenStreetMap
 
 
-class OpenStreetMapsFigure(BaseFigure):
+class OpenStreetMapsPlot(WKTPlot):
+    """ OpenStreetMaps WKTPlot Bokeh wrapper class.
+    """
 
-    @classmethod    
-    def create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> Figure:
+    mapper = OpenStreetMap
+
+    @classmethod
+    def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 
         # Set axis type to load the map
         # - https://docs.bokeh.org/en/latest/docs/user_guide/geo.html#tile-provider-maps
@@ -17,10 +22,8 @@ class OpenStreetMapsFigure(BaseFigure):
             "y_axis_type": "mercator",
         }
 
-        fig = figure(title=title, **default_kwargs)
-        fig.toolbar.autohide = True
-
         tile_provider = get_provider(Vendors.OSM)
+        fig = super().create_figure(title=title, **default_kwargs)
         fig.add_tile(tile_provider)
 
         return fig
