@@ -1,46 +1,9 @@
+from .common import PLOT_TITLE, PLOT_FILE, STYLE_KWARGS
 from pathlib import Path
 from unittest.mock import MagicMock
 from wktplot.plots.standard import WKTPlot
 
-import tempfile
 import pytest
-
-PLOT_TITLE = "Michael Plot ABC123"
-PLOT_FILE = "michael_plot_abc123.html"
-STYLE_KWARGS = {"color": "MidnightBlue", "line_width": 3.0}
-
-
-@pytest.fixture()
-def mock_bokeh(mocker) -> MagicMock:
-    mock_bokeh: MagicMock = mocker.patch("wktplot.plots.standard.plt")
-    return mock_bokeh
-
-
-@pytest.fixture()
-def temp_dir() -> str:
-    with tempfile.TemporaryDirectory() as temp_dir:
-        yield temp_dir
-
-
-@pytest.fixture()
-def mock_plot(mock_bokeh: MagicMock, temp_dir: str) -> WKTPlot:
-    plot = WKTPlot(
-        title=PLOT_TITLE,
-        save_dir=temp_dir,
-        **STYLE_KWARGS,
-    )
-    plot.mapper = MagicMock()
-    yield plot
-
-
-@pytest.fixture()
-def mock_plot_without_save_dir(mock_bokeh: MagicMock) -> WKTPlot:
-    plot = WKTPlot(
-        title=PLOT_TITLE,
-        **STYLE_KWARGS,
-    )
-    plot.mapper = MagicMock()
-    yield plot
 
 
 class TestConstructor:
@@ -131,6 +94,7 @@ class TestSave:
         mock_plot.save()
         mock_bokeh.save.assert_called_once_with(mock_plot.figure)
 
+
 class TestShow:
 
     def test_verify_plot_shown(
@@ -141,6 +105,7 @@ class TestShow:
 
         mock_plot.show()
         mock_bokeh.show.assert_called_once_with(mock_plot.figure)
+
 
 class TestAddShape:
 
