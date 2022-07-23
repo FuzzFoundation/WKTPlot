@@ -12,6 +12,10 @@ class WKTPlot(BasePlot):
     """
 
     mapper = StandardMap
+    default_figure_style_kwargs: Dict[str, str] = {
+        "x_axis_label": "Longitude",
+        "y_axis_label": "Latitude",
+    }
 
     def __init__(
         self,
@@ -35,7 +39,6 @@ class WKTPlot(BasePlot):
 
         if not isinstance(title, str):
             raise ValueError(f"Given argument `title` is not a string. [{title=}]")
-        title: str = sanitize_text(title)
 
         if save_dir is not None:
             if isinstance(save_dir, str):
@@ -44,7 +47,7 @@ class WKTPlot(BasePlot):
             if not (isinstance(save_dir, Path) and save_dir.is_dir()):
                 raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir=}]")
 
-            filename: Path = save_dir / f"{title}.html"
+            filename: Path = save_dir / f"{sanitize_text(title)}.html"
             plt.output_file(filename=filename, title=title, mode="inline")
 
         self.figure: plt.Figure = self._create_figure(title=title, **figure_style_kwargs)
@@ -53,8 +56,7 @@ class WKTPlot(BasePlot):
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 
         default_kwargs: Dict[str, Any] = {
-            "x_axis_label": "Longitude",
-            "y_axis_label": "Latitude",
+            **cls.default_figure_style_kwargs,
             **style_kwargs,
         }
 
@@ -64,13 +66,10 @@ class WKTPlot(BasePlot):
         return fig
 
     def save(self) -> None:
-
         plt.save(self.figure)
 
     def show(self) -> None:
-
         plt.show(self.figure)
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
-
         self.mapper.add_shape(self.figure, shape, **style_kwargs)
