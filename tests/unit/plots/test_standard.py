@@ -19,7 +19,7 @@ class TestConstructor:
             [0, 1],
             {"x": 1},
             set("abc"),
-            2-3j,
+            2 - 3j,
         ]
 
         for save_dir in invalid_dirs:
@@ -36,7 +36,7 @@ class TestConstructor:
             [1, 2, 3],
             {"a": 1},
             set("abc"),
-            1+5j,
+            1 + 5j,
         ]
 
         for title in invalid_titles:
@@ -64,8 +64,8 @@ class TestConstructor:
             title=PLOT_TITLE,
             **expected_kwargs,
         )
-        assert mock_plot.figure.toolbar.autohide == True
-    
+        assert mock_plot.figure.toolbar.autohide is True
+
     def test_when_not_given_save_dir_bokeh_output_file_not_set(
         self,
         mock_bokeh: MagicMock,

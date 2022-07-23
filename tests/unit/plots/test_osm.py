@@ -24,5 +24,3 @@ class TestConstructor:
             **expected_kwargs,
         )
         mock_osm_plot.figure.add_tile.assert_called_once_with(mock_get_provider.return_value)
-        
-

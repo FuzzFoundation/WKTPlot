@@ -18,9 +18,10 @@ def temp_dir() -> str:
     with tempfile.TemporaryDirectory() as temp_dir:
         yield temp_dir
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # WKTPlot
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 @pytest.fixture()
 def mock_plot(
@@ -49,9 +50,10 @@ def mock_plot_without_save_dir(
     plot.mapper = MagicMock()
     yield plot
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # OpenStreetMapsPlot
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 @pytest.fixture()
 def mock_get_provider(mocker) -> MagicMock:
