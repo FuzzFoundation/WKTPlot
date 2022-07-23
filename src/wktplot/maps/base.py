@@ -6,7 +6,7 @@ from typing import List, Tuple, Union
 class BaseMap(ABC):
 
     @abstractclassmethod
-    def get_point_coords(cls, shape: Point) -> Tuple[float, float]:
+    def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:
         """ Get x, y coordinate of the given `shape` geometry.
 
         Args:
@@ -17,7 +17,7 @@ class BaseMap(ABC):
         """
 
     @abstractclassmethod
-    def get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[int], List[int]]:
+    def _get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[int], List[int]]:
         """ Get x, y coordinates of the given `shape` geometry.
 
         Args:
@@ -28,7 +28,7 @@ class BaseMap(ABC):
         """
 
     @abstractclassmethod
-    def get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
+    def _get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
         """ Get x, y coordinates of the given `shape` geometry.
 
         Args:

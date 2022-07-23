@@ -35,9 +35,9 @@ def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[
 class OpenStreetMap(StandardMap):
 
     @classmethod
-    def get_point_coords(cls, shape: Point) -> Tuple[float, float]:
+    def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:
 
-        geo_x, geo_y = super().get_point_coords(shape)
+        geo_x, geo_y = super()._get_point_coords(shape)
         merc_x, merc_y = map(
             float,
             geographic_to_mercator(
@@ -49,9 +49,9 @@ class OpenStreetMap(StandardMap):
         return merc_x, merc_y
 
     @classmethod
-    def get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[float], List[float]]:
+    def _get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[float], List[float]]:
 
-        geo_x_list, geo_y_list = super().get_line_string_coords(shape)
+        geo_x_list, geo_y_list = super()._get_line_string_coords(shape)
 
         merc_x, merc_y = map(
             list,
@@ -63,12 +63,12 @@ class OpenStreetMap(StandardMap):
         return merc_x, merc_y
 
     @classmethod
-    def get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
+    def _get_polygon_coords(cls, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
 
         merc_x_nested_list: List[List[float]] = []
         merc_y_nested_list: List[List[float]] = []
 
-        geo_x_nested_list, geo_y_nested_list = super().get_polygon_coords(shape)
+        geo_x_nested_list, geo_y_nested_list = super()._get_polygon_coords(shape)
 
         for geo_x_list, geo_y_list in zip(geo_x_nested_list, geo_y_nested_list):
             merc_x_arr, merc_y_arr = map(
