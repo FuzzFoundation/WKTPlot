@@ -2,7 +2,7 @@ from bokeh.plotting import Figure
 from shapely.geometry import Point, LineString, LinearRing, Polygon
 from shapely.geometry.base import BaseGeometry, BaseMultipartGeometry
 from shapely import wkt
-from typing import List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 from wktplot.common.types import SUPPORTED_GEOMS
 from wktplot.maps.base import BaseMap
 
@@ -10,18 +10,16 @@ from wktplot.maps.base import BaseMap
 class StandardMap(BaseMap):
 
     @classmethod
-    def get_point_coords(cls, shape: Point) -> Tuple[float, float]:
-
+    def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:
         return shape.x, shape.y
 
     @classmethod
-    def get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[float], List[float]]:
-
+    def _get_line_string_coords(cls, shape: Union[LineString, LinearRing]) -> Tuple[List[float], List[float]]:
         x, y = map(list, shape.xy)
         return x, y
 
     @classmethod
-    def get_polygon_coords(self, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
+    def _get_polygon_coords(self, shape: Polygon) -> Tuple[List[List[float]], List[List[float]]]:
 
         ext_x, ext_y = map(list, shape.exterior.xy)
 
@@ -39,7 +37,7 @@ class StandardMap(BaseMap):
         return x, y
 
     @classmethod
-    def add_shape(cls, figure: Figure, shape: Union[str, BaseGeometry], **style_kwargs) -> None:
+    def add_shape(cls, figure: Figure, shape: Union[str, BaseGeometry], **style_kwargs: Dict[str, Any]) -> None:
 
         if isinstance(shape, str):
             shape = wkt.loads(shape)
@@ -57,13 +55,13 @@ class StandardMap(BaseMap):
                 cls.add_shape(figure, poly, **style_kwargs)
 
         elif isinstance(shape, Point):
-            x, y = cls.get_point_coords(shape)
+            x, y = cls._get_point_coords(shape)
             figure.circle(x, y, **style_kwargs)
 
         elif isinstance(shape, (LineString, LinearRing)):
-            x, y = cls.get_line_string_coords(shape)
+            x, y = cls._get_line_string_coords(shape)
             figure.line(x, y, **style_kwargs)
 
         elif isinstance(shape, Polygon):
-            x, y = cls.get_polygon_coords(shape)
+            x, y = cls._get_polygon_coords(shape)
             figure.multi_polygons([[x]], [[y]], **style_kwargs)
