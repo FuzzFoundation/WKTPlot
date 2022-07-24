@@ -38,14 +38,14 @@ class WKTPlot(BasePlot):
         """
 
         if not isinstance(title, str):
-            raise ValueError(f"Given argument `title` is not a string. [{title=}]")
+            raise ValueError(f"Given argument `title` is not a string. [{title}]")
 
         if save_dir is not None:
             if isinstance(save_dir, str):
                 save_dir = Path(save_dir)
 
             if not (isinstance(save_dir, Path) and save_dir.is_dir()):
-                raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir=}]")
+                raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
             filename: Path = save_dir / f"{sanitize_text(title)}.html"
             plt.output_file(filename=filename, title=title, mode="inline")
