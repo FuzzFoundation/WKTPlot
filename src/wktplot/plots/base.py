@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod, abstractclassmethod
-from bokeh.plotting import Figure
+from bokeh import plotting as plt
 from shapely.geometry.base import BaseGeometry
 from typing import Any, Dict, Union
 
@@ -7,7 +7,7 @@ from typing import Any, Dict, Union
 class BasePlot(ABC):
 
     @abstractclassmethod
-    def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> Figure:
+    def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
         """ Utility method to create Bokeh figure.
 
         Args:
