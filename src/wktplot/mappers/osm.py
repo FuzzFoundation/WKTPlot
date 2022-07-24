@@ -2,7 +2,7 @@ import numpy as np
 
 from shapely.geometry import Point, LineString, LinearRing, Polygon
 from typing import List, Tuple, Union
-from wktplot.maps.standard import StandardMap
+from wktplot.mappers.standard import StandardMapper
 
 
 EARTH_RADIUS: float = 6378137.0
@@ -32,7 +32,7 @@ def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[
     return merc_lng, merc_lat
 
 
-class OpenStreetMap(StandardMap):
+class OpenStreetMapper(StandardMapper):
 
     @classmethod
     def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:

@@ -1,5 +1,5 @@
 from shapely import wkt
-from wktplot.maps.osm import OpenStreetMap
+from wktplot.mappers.osm import OpenStreetMapper
 
 import pytest
 
@@ -10,7 +10,7 @@ class TestGetPointCoords:
 
         expected_coords = (1113194.90793, 3503549.84350)
         shape = wkt.loads("POINT (30 10)")
-        assert OpenStreetMap._get_point_coords(shape) == pytest.approx(expected_coords)
+        assert OpenStreetMapper._get_point_coords(shape) == pytest.approx(expected_coords)
 
 
 class TestGetLineStringCoords:
@@ -31,7 +31,7 @@ class TestGetLineStringCoords:
         )
         shape = wkt.loads("LINESTRING (30 10, 10 30, 40 40)")
         for actual, expected in zip(
-            OpenStreetMap._get_line_string_coords(shape),
+            OpenStreetMapper._get_line_string_coords(shape),
             expected_coords
         ):
             assert actual == pytest.approx(expected)
@@ -57,7 +57,7 @@ class TestGetPolygonCoords:
         )
         shape = wkt.loads("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
         for actual, expected in zip(
-            OpenStreetMap._get_polygon_coords(shape),
+            OpenStreetMapper._get_polygon_coords(shape),
             expected_coords
         ):
             assert actual[0] == pytest.approx(expected[0])

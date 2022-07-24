@@ -3,15 +3,15 @@ from pathlib import Path
 from shapely.geometry.base import BaseGeometry
 from typing import Any, Dict, Optional, Union
 from wktplot.common.file_utils import get_random_string, sanitize_text
+from wktplot.mappers.standard import StandardMapper
 from wktplot.plots.base import BasePlot
-from wktplot.maps.standard import StandardMap
 
 
 class WKTPlot(BasePlot):
     """ Standard WKTPlot Bokeh wrapper class.
     """
 
-    mapper = StandardMap
+    mapper = StandardMapper
     default_figure_style_kwargs: Dict[str, str] = {
         "x_axis_label": "Longitude",
         "y_axis_label": "Latitude",

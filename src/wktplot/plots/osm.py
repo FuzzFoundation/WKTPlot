@@ -1,15 +1,15 @@
 from bokeh import plotting as plt
 from bokeh.tile_providers import Vendors, get_provider
 from typing import Any, Dict
+from wktplot.mappers.osm import OpenStreetMapper
 from wktplot.plots.standard import WKTPlot
-from wktplot.maps.osm import OpenStreetMap
 
 
 class OpenStreetMapsPlot(WKTPlot):
     """ OpenStreetMaps WKTPlot Bokeh wrapper class.
     """
 
-    mapper = OpenStreetMap
+    mapper = OpenStreetMapper
     default_figure_style_kwargs: Dict[str, str] = {
         "x_axis_type": "mercator",
         "y_axis_type": "mercator",

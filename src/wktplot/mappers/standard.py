@@ -1,13 +1,13 @@
 from bokeh.plotting import Figure
+from shapely import wkt
 from shapely.geometry import Point, LineString, LinearRing, Polygon
 from shapely.geometry.base import BaseGeometry, BaseMultipartGeometry
-from shapely import wkt
 from typing import Any, Dict, List, Tuple, Union
 from wktplot.common.types import SUPPORTED_GEOMS
-from wktplot.maps.base import BaseMap
+from wktplot.mappers.base import BaseMapper
 
 
-class StandardMap(BaseMap):
+class StandardMapper(BaseMapper):
 
     @classmethod
     def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:

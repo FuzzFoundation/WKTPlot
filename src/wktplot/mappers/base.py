@@ -3,7 +3,7 @@ from shapely.geometry import Point, LineString, LinearRing, Polygon
 from typing import List, Tuple, Union
 
 
-class BaseMap(ABC):
+class BaseMapper(ABC):
 
     @abstractclassmethod
     def _get_point_coords(cls, shape: Point) -> Tuple[float, float]:
