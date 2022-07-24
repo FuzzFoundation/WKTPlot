@@ -1,14 +1,23 @@
 from abc import ABC, abstractmethod, abstractclassmethod
 from bokeh.plotting import Figure
 from shapely.geometry.base import BaseGeometry
-from typing import Union
+from typing import Any, Dict, Union
 
 
 class BasePlot(ABC):
 
     @abstractclassmethod
-    def _create_figure(cls) -> Figure:
-        """ TODO: docstring
+    def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> Figure:
+        """ Utility method to create Bokeh figure.
+
+        Args:
+            title (str): Figure title.
+            **style_kwargs (dict[str, Any]): Dictionary of attributes to style created figure.
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/latest/docs/reference/plotting/figure.html
+
+        Returns:
+            Bokeh figure object.
         """
 
     @abstractmethod
