@@ -17,28 +17,10 @@ The [well-known-text](https://en.wikipedia.org/wiki/Well-known_text_representati
 
 WKTPlot is a library provides an easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library for generating interactive visualizations. Bokeh also provides a rich assortment of [stylizing options](https://docs.bokeh.org/en/latest/docs/user_guide/styling.html) which are all usable through WKTPlot's `add_shape` method.
 
-## Basic Usage
-``` python
-from shapely.geometry import Polygon
-from wktplot import WKTPlot
-
-# Create plot object
-plot = WKTPlot(title="My first plot!", save_dir="/path/to/directory")
-
-# Define shapes either through well-known-text (WKT) string, or shapely object
-shape_1 = "POINT (30 10)"
-shape_2 = Polygon([[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]])
-
-# Add shapes to the plot
-plot.add_shape(shape_1, fill_color="green", line_width=3)
-plot.add_shape(shape_2, fill_color="cyan", fill_alpha=0.7)
-
-# Save the plot to disk [/path/to/directory/my_first_plot.html]
-plot.save()
-```
+---
 
 ### Supported datatypes
-WKTPlot supports majority of shapely objects including:
+WKTPlot supports the majority of well-known-text primitives, including:
 * Point
 * MultiPoint
 * LineString
@@ -47,6 +29,51 @@ WKTPlot supports majority of shapely objects including:
 * Polygon
 * MultiPolygon
 * GeometryCollection
+
+---
+
+## Basic Usage
+``` python
+from shapely.geometry import LineString
+from wktplot import WKTPlot
+
+# Create plot object
+plot = WKTPlot(title="My first plot!", save_dir="/path/to/directory")
+
+# Define shapes either through well-known-text (WKT) string, or shapely object
+line_string = LineString([[45, 5], [30, -7], [40, 10]])
+polygon = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))"
+points = "MULTIPOINT (17 11, 13 0, 22 -5, 25 7)"
+
+# Add shapes to the plot with style args
+plot.add_shape(line_string, line_color="firebrick", line_alpha=0.5, line_width=20)
+plot.add_shape(polygon, fill_color="#6495ED", fill_alpha=0.5)
+plot.add_shape(points, fill_color=(50, 205, 50, 0.25), fill_alpha=0.7, size=30)
+
+# Save plot to disk [/path/to/directory/my_first_plot.html]
+plot.save()
+```
+
+![Output](https://i.imgur.com/aajbppI.png)
+
+---
+## OpenStreetMaps
+WKTPlot now supports the ability to integrate with OpenStreetMaps. Shape coordinates will be projected to the Mercator coordinate system, which appear to distort shape proportions compared to standard geometric projection.
+```python
+# Import OpenStreetMaps plotting class
+from wktplot.plots.osm import OpenStreetMapsPlot
+
+# Create plot object just like standard WKTPlot class
+plot = OpenStreetMapsPlot("Open Street Map Plot", save_dir="/path/to/directory")
+
+shape = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10), (20 30, 35 35, 30 20, 20 30))"
+plot.add_shape(shape, fill_alpha=0.5, fill_color="firebrick")
+
+plot.save()
+```
+![Output](https://i.imgur.com/JdUDMh7.png)
+
+---
 
 ## Advanced Usage
 Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
@@ -70,6 +97,33 @@ plot.save()
 Which will result in this output:
 ![CaliforniaCounties](https://i.imgur.com/YPQQlml.png)
 
-## Future Plans
-* Add native support for visualizing GeoDataframes and shapefiles.
-* Make web view more interactive.
+---
+
+## Development
+### Bugs / Feature Requests
+Plese open an `Issue` in Github with any bugs found or feature requests, and follow the prompts so that developers can reproduce or implement the necessary changes.
+
+### Local development
+Development of this model is centered around the Makefile. All you need to spin up a working environment to build and test this module can be done with the Makefile.
+
+1. Clone the repository onto your machine.
+    ```sh
+    git clone https://github.com/FuzzFoundation/WKTPlot.git
+    ```
+2. Create the Python virtaul environment and install module's development / testing dependencies. This will also install WKTPlot in [develop mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html).
+    ```sh
+    make develop
+    ```
+3. Activate virtual environment
+    ```sh
+    source venv/bin/activate
+    ```
+4. Run linting and unittests.
+    ```sh
+    make test
+    ```
+5. When you want to remove the virtual environment and clean up after development.
+    ```sh
+    deactivate
+    make clean  # This will remove all generated files, like .coverage and build/
+    make sparkling  # This will remove all generate files and the virtual env.
