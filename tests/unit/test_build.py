@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 
 
-SOURCE_PATH = Path(__file__).parent / ".." / ".." / "src" / "wktplot"
+SOURCE_PATH = (Path(__file__).parent / ".." / ".." / "src" / "wktplot").resolve()
 
 
 class TestFolderStructure:
@@ -12,4 +12,4 @@ class TestFolderStructure:
             directory = Path(directory)
             if directory.name == "__pycache__":
                 continue
-            assert "__init__.py" in files, f"Folder missing __init__.py file, {directory.resolve()}"
+            assert "__init__.py" in files, f"Folder missing __init__.py file, {directory}"
