@@ -66,22 +66,6 @@ class TestConstructor:
         )
         assert mock_plot.figure.toolbar.autohide is True
 
-    def test_when_not_given_save_dir_bokeh_output_file_not_set(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot_without_save_dir: WKTPlot,
-    ) -> None:
-
-        expected_kwargs = {
-            **STYLE_KWARGS,
-            **mock_plot_without_save_dir.default_figure_style_kwargs,
-        }
-        mock_bokeh.output_file.assert_not_called()
-        mock_bokeh.figure.assert_called_once_with(
-            title=PLOT_TITLE,
-            **expected_kwargs,
-        )
-
 
 class TestSave:
 
