@@ -15,7 +15,7 @@ pip install wktplot
 ## Description
 The [well-known-text](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) standard is very common for working with and representing geospatial data, however it is painful to visualize them programatically. The [Shapely](https://github.com/shapely/shapely) library  extends the functionality of the well-known-text standard with a rich assortment of geometry objects and operations, but it doesn't make it any easier to visualize.
 
-WKTPlot is a library provides an easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library for generating interactive visualizations. Bokeh also provides a rich assortment of [stylizing options](https://docs.bokeh.org/en/latest/docs/user_guide/styling.html) which are all usable through WKTPlot's `add_shape` method.
+WKTPlot is a library that provides an easy-to-use API for visualizing well-known-text strings and shapely objects programatically. This library wraps around the [Bokeh](https://github.com/bokeh/bokeh) library, which is a powerful plotting library for generating interactive visualizations. Bokeh also provides a rich assortment of [stylizing options](https://docs.bokeh.org/en/latest/docs/user_guide/styling.html) which are all usable through WKTPlot's `add_shape` method.
 
 ---
 
@@ -101,7 +101,7 @@ Which will result in this output:
 
 ## Development
 ### Bugs / Feature Requests
-Plese open an `Issue` in Github with any bugs found or feature requests, and follow the prompts so that developers can reproduce or implement the necessary changes.
+Please open an `Issue` in Github with any bugs found or feature requests, and follow the prompts so that developers can reproduce or implement the necessary changes.
 
 ### Local development
 Development of this model is centered around the Makefile. All you need to spin up a working environment to build and test this module can be done with the Makefile.
@@ -110,7 +110,7 @@ Development of this model is centered around the Makefile. All you need to spin 
     ```sh
     git clone https://github.com/FuzzFoundation/WKTPlot.git
     ```
-2. Create the Python virtaul environment and install module's development / testing dependencies. This will also install WKTPlot in [develop mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html).
+2. Create the Python virtual environment and install module's development / testing dependencies. This will also install WKTPlot in [develop mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html).
     ```sh
     make develop
     ```
