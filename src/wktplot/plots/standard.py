@@ -21,7 +21,7 @@ class WKTPlot(BasePlot):
 
         Args:
             title (str): Title for graph and output filename, defaults to random string if unset.
-            save_dir (str | obj: Path | None, default = None): Optional path to save output file to.
+            save_dir (str | obj: Path, default = "."): Optional path to save output file to.
             **figure_style_kwargs (dict[str, Any]): Dictionary of attributes to style the created figure.
                 See this guide for available style attributes:
                 https://docs.bokeh.org/en/2.4.3/docs/reference/plotting/figure.html
