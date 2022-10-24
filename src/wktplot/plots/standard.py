@@ -47,11 +47,7 @@ class WKTPlot(BasePlot):
         self.mapper = StandardMapper
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
-        self.mapper.add_shape(
-            self.figure,
-            shape,
-            **style_kwargs,
-        )
+        self.mapper.add_shape(self.figure, shape, **style_kwargs)
 
     def save(self) -> None:
         plt.save(self.figure)
