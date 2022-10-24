@@ -15,6 +15,25 @@ class OpenStreetMapsPlot(WKTPlot):
         "y_axis_type": "mercator",
     }
 
+    def __init__(self, *args, disable_mercator: bool = False, **kwargs) -> None:
+        """ Create figure with given arguments.
+
+        Args:
+            title (str): Title for graph and output filename, defaults to random string if unset.
+            save_dir (str | obj: Path | None, default = None): Optional path to save output file to.
+            disable_mercator (bool, default=False): Disable mercator proction calculation for shape data.
+            **figure_style_kwargs (dict[str, Any]): Dictionary of attributes to style the created figure.
+                See this guide for available style attributes:
+                https://docs.bokeh.org/en/2.4.3/docs/reference/plotting/figure.html
+
+        Raises:
+            ValueError: If value for `title` is not a string or None.
+            OSError: If value for `save_dir` is not a directory.
+        """
+
+        self.mapper.disable_mercator = disable_mercator
+        super().__init__(*args, **kwargs)
+
     @classmethod
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 
