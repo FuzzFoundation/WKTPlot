@@ -1,7 +1,7 @@
 from bokeh import plotting as plt
 from pathlib import Path
 from shapely.geometry.base import BaseGeometry
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 from wktplot.common.file_utils import get_random_string, sanitize_text
 from wktplot.mappers.standard import StandardMapper
 from wktplot.plots.base import BasePlot
@@ -39,7 +39,7 @@ class WKTPlot(BasePlot):
 
         if not isinstance(title, str):
             raise ValueError(f"Given argument `title` is not a string. [{title}]")
-        
+
         if isinstance(save_dir, str):
             save_dir = Path(save_dir)
 
@@ -63,9 +63,9 @@ class WKTPlot(BasePlot):
 
     def show(self) -> None:
         plt.show(self.figure)
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     @classmethod
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 

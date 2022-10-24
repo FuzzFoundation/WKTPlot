@@ -26,7 +26,8 @@ class OpenStreetMapper(StandardMapper):
         Return:
             tuple[float | obj: np.ndarray, float | obj: np.ndarray]: Tuple containing longitude and latitude mercator
                 coordinates.
-        """
+        """  # noqa: E501
+
         if cls.disable_mercator is True:
             return lat_deg, lng_deg
 

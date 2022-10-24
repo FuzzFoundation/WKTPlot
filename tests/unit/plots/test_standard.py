@@ -69,11 +69,7 @@ class TestConstructor:
 
 class TestSave:
 
-    def test_verify_plot_saved(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot: WKTPlot,
-    ) -> None:
+    def test_verify_plot_saved(self, mock_bokeh: MagicMock, mock_plot: WKTPlot) -> None:
 
         mock_plot.save()
         mock_bokeh.save.assert_called_once_with(mock_plot.figure)
@@ -81,11 +77,7 @@ class TestSave:
 
 class TestShow:
 
-    def test_verify_plot_shown(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot: WKTPlot,
-    ) -> None:
+    def test_verify_plot_shown(self, mock_bokeh: MagicMock, mock_plot: WKTPlot) -> None:
 
         mock_plot.show()
         mock_bokeh.show.assert_called_once_with(mock_plot.figure)

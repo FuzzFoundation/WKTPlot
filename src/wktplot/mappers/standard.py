@@ -38,7 +38,7 @@ class StandardMapper(BaseMapper):
         elif isinstance(shape, Polygon):
             x, y = cls._get_polygon_coords(shape)
             figure.multi_polygons([[x]], [[y]], **style_kwargs)
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     @classmethod
@@ -67,5 +67,3 @@ class StandardMapper(BaseMapper):
             y.append(intr_y[:-1])
 
         return x, y
-
-    
