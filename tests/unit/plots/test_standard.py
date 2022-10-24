@@ -51,10 +51,6 @@ class TestConstructor:
     ) -> None:
 
         expected_path = Path(temp_dir) / PLOT_FILE
-        expected_kwargs = {
-            **STYLE_KWARGS,
-            **mock_plot.default_figure_style_kwargs,
-        }
         mock_bokeh.output_file.assert_called_once_with(
             filename=expected_path,
             title=PLOT_TITLE,
@@ -62,7 +58,9 @@ class TestConstructor:
         )
         mock_bokeh.figure.assert_called_once_with(
             title=PLOT_TITLE,
-            **expected_kwargs,
+            x_axis_label="Longitude",
+            y_axis_label="Latitude",
+            **STYLE_KWARGS,
         )
         assert mock_plot.figure.toolbar.autohide is True
 

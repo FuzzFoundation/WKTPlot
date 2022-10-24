@@ -11,12 +11,6 @@ class WKTPlot(BasePlot):
     """ Standard WKTPlot Bokeh wrapper class.
     """
 
-    mapper = StandardMapper
-    default_figure_style_kwargs: Dict[str, str] = {
-        "x_axis_label": "Longitude",
-        "y_axis_label": "Latitude",
-    }
-
     def __init__(
         self,
         title: str = get_random_string(),
@@ -50,6 +44,7 @@ class WKTPlot(BasePlot):
         plt.output_file(filename=filename, title=title, mode="inline")
 
         self.figure: plt.Figure = self._create_figure(title=title, **figure_style_kwargs)
+        self.mapper = StandardMapper
 
     def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
         self.mapper.add_shape(
@@ -70,7 +65,8 @@ class WKTPlot(BasePlot):
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 
         default_kwargs: Dict[str, Any] = {
-            **cls.default_figure_style_kwargs,
+            "x_axis_label": "Longitude",
+            "y_axis_label": "Latitude",
             **style_kwargs,
         }
 

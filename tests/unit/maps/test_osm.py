@@ -61,11 +61,3 @@ class TestGetPolygonCoords:
             expected_coords
         ):
             assert actual[0] == pytest.approx(expected[0])
-
-
-class TestGeographicToMercator:
-    def test_when_disable_mercator_set_calculation_skipped(self) -> None:
-
-        expected_coords = ([1, 2, 3], [4, 5, 6])
-        OpenStreetMapper.disable_mercator = True
-        assert OpenStreetMapper._geographic_to_mercator(*expected_coords) == expected_coords
