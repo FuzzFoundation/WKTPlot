@@ -11,7 +11,6 @@ COORDINATES = Union[float, np.float64, np.ndarray]
 
 def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[COORDINATES, COORDINATES]:
     """ Convert given lat / long coordinates to mercator coordinates.
-        Disable calculation when class variable `disable_mercator` is set.
         - https://en.wikipedia.org/wiki/Mercator_projection#Derivation
         - https://en.wikipedia.org/wiki/Transverse_Mercator_projection#Formulae_for_the_spherical_transverse_Mercator
 
