@@ -49,28 +49,3 @@ def mock_plot_without_save_dir(
     )
     plot.mapper = MagicMock()
     yield plot
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# OpenStreetMapsPlot
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-@pytest.fixture()
-def mock_get_provider(mocker) -> MagicMock:
-    return mocker.patch("wktplot.plots.osm.get_provider")
-
-
-@pytest.fixture()
-def mock_osm_plot(
-    mock_bokeh: MagicMock,
-    mock_get_provider: MagicMock,
-    temp_dir: str,
-) -> OpenStreetMapsPlot:
-
-    plot = OpenStreetMapsPlot(
-        title=PLOT_TITLE,
-        save_dir=temp_dir,
-        **STYLE_KWARGS,
-    )
-    plot.mapper = MagicMock()
-    yield plot
