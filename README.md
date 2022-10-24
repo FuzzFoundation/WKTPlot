@@ -59,6 +59,8 @@ plot.save()
 ---
 ## OpenStreetMaps
 WKTPlot now supports the ability to integrate with OpenStreetMaps. Shape coordinates will be projected to the Mercator coordinate system, which appear to distort shape proportions compared to standard geometric projection.
+
+If your shape data has already been projected, you can disable the Mercator calculation by setting the `disable_mercator` parameter when creating the plot object. See [Advanced Usage](#advanced-usage) for an example.
 ```python
 # Import OpenStreetMaps plotting class
 from wktplot.plots.osm import OpenStreetMapsPlot
@@ -76,7 +78,7 @@ plot.save()
 ---
 
 ## Advanced Usage
-Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
+Example for plotting from shapefile. Shapefile is of California's county boundaries, download from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
 ```python
 import shapefile  # pyshp module
 
