@@ -20,7 +20,7 @@ class WKTPlot(BasePlot):
     def __init__(
         self,
         title: str = get_random_string(),
-        save_dir: Optional[Union[str, Path]] = None,
+        save_dir: Union[str, Path] = Path("."),
         **figure_style_kwargs: Dict[str, Any],
     ) -> None:
         """ Create figure with given arguments.
@@ -39,19 +39,33 @@ class WKTPlot(BasePlot):
 
         if not isinstance(title, str):
             raise ValueError(f"Given argument `title` is not a string. [{title}]")
+        
+        if isinstance(save_dir, str):
+            save_dir = Path(save_dir)
 
-        if save_dir is not None:
-            if isinstance(save_dir, str):
-                save_dir = Path(save_dir)
+        if not (isinstance(save_dir, Path) and save_dir.is_dir()):
+            raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
 
-            if not (isinstance(save_dir, Path) and save_dir.is_dir()):
-                raise OSError(f"Given argument `save_dir` is not a directory. [{save_dir}]")
-
-            filename: Path = save_dir / f"{sanitize_text(title)}.html"
-            plt.output_file(filename=filename, title=title, mode="inline")
+        filename: Path = save_dir / f"{sanitize_text(title)}.html"
+        plt.output_file(filename=filename, title=title, mode="inline")
 
         self.figure: plt.Figure = self._create_figure(title=title, **figure_style_kwargs)
 
+    def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
+        self.mapper.add_shape(
+            self.figure,
+            shape,
+            **style_kwargs,
+        )
+
+    def save(self) -> None:
+        plt.save(self.figure)
+
+    def show(self) -> None:
+        plt.show(self.figure)
+    
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    
     @classmethod
     def _create_figure(cls, title: str, **style_kwargs: Dict[str, Any]) -> plt.Figure:
 
@@ -64,12 +78,3 @@ class WKTPlot(BasePlot):
         fig.toolbar.autohide = True
 
         return fig
-
-    def save(self) -> None:
-        plt.save(self.figure)
-
-    def show(self) -> None:
-        plt.show(self.figure)
-
-    def add_shape(self, shape: Union[str, BaseGeometry], **style_kwargs: dict) -> None:
-        self.mapper.add_shape(self.figure, shape, **style_kwargs)
