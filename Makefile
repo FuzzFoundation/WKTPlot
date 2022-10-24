@@ -40,5 +40,5 @@ sparkling: clean
 
 PHONY: test
 test:
-	$(VENVPYTHON) -m flake8 .
 	$(VENVPYTHON) -m pytest
+	$(VENVPYTHON) -m flake8 .
