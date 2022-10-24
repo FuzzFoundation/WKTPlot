@@ -8,6 +8,7 @@ from wktplot.mappers.standard import StandardMapper
 EARTH_RADIUS: float = 6378137.0
 COORDINATES = Union[float, np.float64, np.ndarray]
 
+
 def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[COORDINATES, COORDINATES]:
     """ Convert given lat / long coordinates to mercator coordinates.
         Disable calculation when class variable `disable_mercator` is set.
@@ -21,7 +22,7 @@ def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[
     Return:
         tuple[float | obj: np.ndarray, float | obj: np.ndarray]: Tuple containing longitude and latitude mercator
             coordinates.
-    """ 
+    """
 
     φ = np.radians(lat_deg)
     λ = np.radians(lng_deg)
@@ -30,6 +31,7 @@ def geographic_to_mercator(lat_deg: COORDINATES, lng_deg: COORDINATES) -> Tuple[
     merc_lng = EARTH_RADIUS * λ
 
     return merc_lng, merc_lat
+
 
 class OpenStreetMapper(StandardMapper):
 

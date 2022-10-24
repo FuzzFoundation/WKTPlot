@@ -31,6 +31,6 @@ class TestConstructor:
         plot.figure.add_tile.assert_called_once_with(mock_get_provider.return_value)
 
     def test_when_disable_mercator_set_mapped_set_to_Standard(self):
-        
+
         plot = OpenStreetMapsPlot(disable_mercator=True)
         assert plot.mapper == StandardMapper

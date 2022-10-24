@@ -25,7 +25,7 @@ class OpenStreetMapsPlot(WKTPlot):
             ValueError: If value for `title` is not a string or None.
             OSError: If value for `save_dir` is not a directory.
         """
-        
+
         super().__init__(*args, **kwargs)
         self.mapper = StandardMapper if disable_mercator else OpenStreetMapper
 
