@@ -51,10 +51,6 @@ class TestConstructor:
     ) -> None:
 
         expected_path = Path(temp_dir) / PLOT_FILE
-        expected_kwargs = {
-            **STYLE_KWARGS,
-            **mock_plot.default_figure_style_kwargs,
-        }
         mock_bokeh.output_file.assert_called_once_with(
             filename=expected_path,
             title=PLOT_TITLE,
@@ -62,34 +58,16 @@ class TestConstructor:
         )
         mock_bokeh.figure.assert_called_once_with(
             title=PLOT_TITLE,
-            **expected_kwargs,
+            x_axis_label="Longitude",
+            y_axis_label="Latitude",
+            **STYLE_KWARGS,
         )
         assert mock_plot.figure.toolbar.autohide is True
-
-    def test_when_not_given_save_dir_bokeh_output_file_not_set(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot_without_save_dir: WKTPlot,
-    ) -> None:
-
-        expected_kwargs = {
-            **STYLE_KWARGS,
-            **mock_plot_without_save_dir.default_figure_style_kwargs,
-        }
-        mock_bokeh.output_file.assert_not_called()
-        mock_bokeh.figure.assert_called_once_with(
-            title=PLOT_TITLE,
-            **expected_kwargs,
-        )
 
 
 class TestSave:
 
-    def test_verify_plot_saved(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot: WKTPlot,
-    ) -> None:
+    def test_verify_plot_saved(self, mock_bokeh: MagicMock, mock_plot: WKTPlot) -> None:
 
         mock_plot.save()
         mock_bokeh.save.assert_called_once_with(mock_plot.figure)
@@ -97,11 +75,7 @@ class TestSave:
 
 class TestShow:
 
-    def test_verify_plot_shown(
-        self,
-        mock_bokeh: MagicMock,
-        mock_plot: WKTPlot,
-    ) -> None:
+    def test_verify_plot_shown(self, mock_bokeh: MagicMock, mock_plot: WKTPlot) -> None:
 
         mock_plot.show()
         mock_bokeh.show.assert_called_once_with(mock_plot.figure)

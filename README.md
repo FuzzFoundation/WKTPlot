@@ -59,6 +59,8 @@ plot.save()
 ---
 ## OpenStreetMaps
 WKTPlot now supports the ability to integrate with OpenStreetMaps. Shape coordinates will be projected to the Mercator coordinate system, which appear to distort shape proportions compared to standard geometric projection.
+
+If your shape data has already been projected, you can disable the Mercator calculation by setting the `disable_mercator` parameter when creating the plot object. See [Advanced Usage](#advanced-usage) for an example.
 ```python
 # Import OpenStreetMaps plotting class
 from wktplot.plots.osm import OpenStreetMapsPlot
@@ -76,26 +78,42 @@ plot.save()
 ---
 
 ## Advanced Usage
-Example for plotting from shapefile. Shapefile is of California's county boundaries from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
+Example for plotting from shapefile. Shapefile is of California's county boundaries, download from [here](https://data.ca.gov/dataset/ca-geographic-boundaries).
 ```python
 import shapefile  # pyshp module
 
-from random import randrange
+from bokeh.palettes import Magma6
+from pathlib import Path
+from random import choice
 from shapely.geometry import Polygon
-from wktplot import WKTPlot
+from wktplot.plots.osm import OpenStreetMapsPlot
 
-def get_rand_color():
-    return f"#{randrange(0, 0xffffff):0>6x}"
 
-plot = WKTPlot(title="California Counties", save_dir="~/scratch")
-with shapefile.Reader("~/scratch/CA_Counties_TIGER2016.shp") as shp:
+COUNTIES_PATH = Path("/path/to/CA_Counties_TIGER2016.shp")
+
+# Create plot and disable mercator calculation
+# because data has already been projected
+plot = OpenStreetMapsPlot(
+    title="California Counties 2016",
+    height=1000,
+    width=1000,
+    disable_mercator=True,
+)
+
+# Read shapefile data points from file
+with shapefile.Reader(COUNTIES_PATH) as shp:
     for shape in shp.shapes():
-        p = Polygon(shape.points)
-        plot.add_shape(p, fill_color=get_rand_color())
+        plot.add_shape(
+            shape=Polygon(shape.points),
+            fill_color=choice(Magma6),
+            fill_alpha=0.75,
+        )
+
+# Save plot to disk [./california_counties_2016.html]
 plot.save()
 ```
 Which will result in this output:
-![CaliforniaCounties](https://i.imgur.com/YPQQlml.png)
+![CaliforniaCounties2016](https://i.imgur.com/lxac0JL.png)
 
 ---
 

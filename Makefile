@@ -31,6 +31,7 @@ clean:
 	rm -rf $(PROJ_BASE)/docs/_build/*
 	rm -f $(PROJ_BASE)/coverage.xml
 	rm -f $(PROJ_BASE)/.coverage
+	find $(PROJ_BASE)/examples -type f ! -name '*.py' -delete
 
 PHONY: sparkling
 sparkling: clean
@@ -39,5 +40,5 @@ sparkling: clean
 
 PHONY: test
 test:
-	$(VENVPYTHON) -m flake8 .
 	$(VENVPYTHON) -m pytest
+	$(VENVPYTHON) -m flake8 .

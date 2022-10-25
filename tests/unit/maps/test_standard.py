@@ -48,37 +48,25 @@ class TestGetPolygonCoords:
 
 class TestAddShape:
 
-    def test_when_given_unsupported_shape_raises_TypeError(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_unsupported_shape_raises_TypeError(self, mock_figure: MagicMock) -> None:
 
         shape = FakeShape()
         with pytest.raises(TypeError):
             StandardMapper.add_shape(mock_figure, shape)
 
-    def test_when_given_empty_shape_returns_early(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_empty_shape_returns_early(self, mock_figure: MagicMock) -> None:
 
         empty_shape = wkt.loads("POINT EMPTY")
         StandardMapper.add_shape(mock_figure, empty_shape)
         mock_figure.circle.assert_not_called()
 
-    def test_when_given_valid_point_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_point_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("POINT (30 10)")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
         mock_figure.circle.assert_called_once_with(30, 10, **STYLE_KWARGS)
 
-    def test_when_given_valid_linestring_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_linestring_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("LINESTRING (30 10, 10 30, 40 40)")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
@@ -88,10 +76,7 @@ class TestAddShape:
             **STYLE_KWARGS,
         )
 
-    def test_when_given_valid_linearring_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_linearring_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("LINEARRING (10 20, 20 25, 35 50, 10 20)")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
@@ -101,10 +86,7 @@ class TestAddShape:
             **STYLE_KWARGS,
         )
 
-    def test_when_given_valid_polygon_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_polygon_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
@@ -114,10 +96,7 @@ class TestAddShape:
             **STYLE_KWARGS,
         )
 
-    def test_when_given_valid_multipoint_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_multipoint_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("MULTIPOINT ((10 40), (40 30), (20 20), (30 10))")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
@@ -128,10 +107,7 @@ class TestAddShape:
             call(30, 10, **STYLE_KWARGS),
         ])
 
-    def test_when_given_valid_multilinestring_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_multilinestring_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
@@ -140,10 +116,7 @@ class TestAddShape:
             call([40, 30, 40, 30], [40, 30, 20, 10], **STYLE_KWARGS),
         ])
 
-    def test_when_given_valid_multipolygon_calls_expected_methods(
-        self,
-        mock_figure: MagicMock,
-    ) -> None:
+    def test_when_given_valid_multipolygon_calls_expected_methods(self, mock_figure: MagicMock) -> None:
 
         shape = wkt.loads("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))")
         StandardMapper.add_shape(mock_figure, shape, **STYLE_KWARGS)
