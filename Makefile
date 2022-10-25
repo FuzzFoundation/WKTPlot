@@ -10,7 +10,7 @@ PHONY: init
 init:
 	@echo "Creating virtual environment 'venv'."
 	python3 -m venv venv || python -m venv venv
-	$(VENVPYTHON) -m pip install --upgrade setuptools pip pip-tools
+	$(VENVPYTHON) -m pip install --upgrade setuptools pip
 
 PHONY: develop
 develop: init
@@ -32,6 +32,7 @@ clean:
 	rm -f $(PROJ_BASE)/coverage.xml
 	rm -f $(PROJ_BASE)/.coverage
 	find $(PROJ_BASE)/examples -type f ! -name '*.py' -delete
+	rm -rf $(PROJ_BASE)/htmlcov
 
 PHONY: sparkling
 sparkling: clean
