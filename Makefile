@@ -32,7 +32,6 @@ clean:
 	rm -f $(PROJ_BASE)/coverage.xml
 	rm -f $(PROJ_BASE)/.coverage
 	find $(PROJ_BASE)/examples -type f ! -name '*.py' -delete
-	rm -rf $(PROJ_BASE)/htmlcov
 
 PHONY: sparkling
 sparkling: clean
